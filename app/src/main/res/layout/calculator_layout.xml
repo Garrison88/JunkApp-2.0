@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:calc_card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/calc_card_view"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/calc_scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/calc_card_view"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/spinner_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:weightSum="2">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/volume_spinner_card_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    calc_card_view:cardBackgroundColor="@color/darkAccent"
+                    calc_card_view:cardUseCompatPadding="true"
+                    calc_card_view:contentPadding="4dp"
+                    android:layout_weight="1">
+
+                    <include layout="@layout/custom_spinner_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <Spinner
+                        android:id="@+id/spinner_volume"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:dropDownWidth="@dimen/custom_spinner_width"/>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/bedload_spinner_card_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    calc_card_view:cardBackgroundColor="@color/darkAccent"
+                    calc_card_view:cardUseCompatPadding="true"
+                    calc_card_view:contentPadding="4dp"
+                    android:layout_weight="1">
+
+                    <include layout="@layout/custom_spinner_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <Spinner
+                        android:id="@+id/spinner_bedload"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:dropDownWidth="@dimen/custom_spinner_width"/>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/display_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:weightSum="2">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/volume_display_card_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    calc_card_view:cardUseCompatPadding="true"
+                    calc_card_view:contentPadding="4dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_display_volume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="8dp"
+                        android:textSize="20sp" />
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/bedload_display_card_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    calc_card_view:cardUseCompatPadding="true"
+                    calc_card_view:contentPadding="4dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_display_bedload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="8dp"
+                        android:textSize="20sp" />
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/calc_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        calc_card_view:cardCornerRadius="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/load_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingTop="8dp"
+                android:hint="$0.00"
+                android:textSize="75sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_add_hst"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Add HST" />
+
+                <Button
+                    android:id="@+id/btn_clear_cost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Clear" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

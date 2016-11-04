@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:journal_card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="false"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_sid_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="SID"
+                        android:inputType="number"
+                        android:maxLength="6" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_receipt_number_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Receipt #"
+                        android:inputType="number"
+                        android:maxLength="5" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sales_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_gross_sale_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Gross Sale"
+                        android:inputType="numberDecimal" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_net_sale_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Net Sale"
+                        android:inputType="numberDecimal" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/job_start_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_access_time_white_24dp"
+                    android:hint="@string/start" />
+
+                <Button
+                    android:id="@+id/job_end_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_access_time_white_24dp"
+                    android:hint="@string/end" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/fuel_spinner_card_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                journal_card_view:cardBackgroundColor="@color/darkAccent"
+                journal_card_view:cardUseCompatPadding="true"
+                journal_card_view:contentPadding="4dp">
+
+                <Spinner
+                    android:id="@+id/spinner_pay_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:dropDownWidth="@dimen/custom_spinner_width" />
+
+            </android.support.v7.widget.CardView>
+
+            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/job_type_segmented_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                segmentedgroup:sc_border_width="2dp"
+                segmentedgroup:sc_corner_radius="2dp"
+                segmentedgroup:sc_tint_color="@color/darkAccent">
+
+                <RadioButton
+                    android:id="@+id/switch_residential"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Residential" />
+
+                <RadioButton
+                    android:id="@+id/switch_commercial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Commercial" />
+
+                <RadioButton
+                    android:id="@+id/switch_cancellation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancellation" />
+
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/enter_job_notes_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Notes"
+                    android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
+                    android:maxLines="4" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/job_cancel_save_button_bar"
+        layout="@layout/cancel_save_button_bar_layout" />
+
+</LinearLayout>

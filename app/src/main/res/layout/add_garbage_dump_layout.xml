@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fadeScrollbars="false"
+    android:orientation="vertical"
+    android:theme="@style/CustomDialog">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/et_add_dump_weight_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/spinner_dump_dialog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:dropDownWidth="@dimen/custom_spinner_width" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_weight_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/et_add_dump_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:hint="Weight (mt)"
+                        android:inputType="numberDecimal"
+                        android:maxLength="4" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dump_cost_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:baselineAligned="false"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gross Cost: " />
+
+                <TextView
+                    android:id="@+id/tv_dump_gross_cost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/edit_dump_cost_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:visibility="gone" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_edit_dump_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/ic_edit_white_24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_receipt_number_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/et_dump_receipt_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Receipt #"
+                        android:inputType="number" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_percent_previous_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/et_percent_previous"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="% Previous"
+                        android:inputType="number"
+                        android:maxLength="3" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+
+        android:id="@+id/garbage_cancel_save_button_bar"
+        layout="@layout/cancel_save_button_bar_layout" />
+
+</LinearLayout>

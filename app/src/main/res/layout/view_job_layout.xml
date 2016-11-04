@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/v_j_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/v_j_static_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gross Sale" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Net Sale" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay Type" />
+
+            <TextView
+                android:id="@+id/tv_job_type_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Job Type" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Receipt #" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/v_j_net_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_view_job_gross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_job_net"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_pay_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_job_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_job_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_job_receipt_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_view_job_notes_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/v_j_top_layout"
+        android:layout_centerHorizontal="true"
+        android:text="NOTES" />
+
+    <TextView
+        android:id="@+id/tv_view_job_notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_view_job_notes_display"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:id="@+id/v_j_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_view_job_notes">
+
+        <Button
+            android:id="@+id/btn_view_job_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="OK" />
+
+        <ImageButton
+            android:id="@+id/btn_delete_job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:src="@drawable/ic_delete_white_36dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

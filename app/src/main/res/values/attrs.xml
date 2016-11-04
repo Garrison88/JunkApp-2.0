@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SpinnerWithHint">
+    <attr name="showHint" format="boolean"/>
+    <attr name="hintText" format="string"/>
+    <attr name="dropdownResource" format="reference"/>
+    <attr name="viewResource" format="reference"/>
+</declare-styleable>
+    </resources>

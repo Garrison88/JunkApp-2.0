@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "342384205482",
+    "firebase_url": "https://junkapp-43226.firebaseio.com",
+    "project_id": "junkapp-43226",
+    "storage_bucket": "junkapp-43226.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342384205482:android:18cc9d22d68787a9",
+        "android_client_info": {
+          "package_name": "com.garrisonthomas.junkapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342384205482-f79v5em4cqpt9nn9li7meoaeeccib1h9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.garrisonthomas.junkapp",
+            "certificate_hash": "C4B7303798A7B91267AEF18F7D17EF8FF0BCEDA5"
+          }
+        },
+        {
+          "client_id": "342384205482-5dgk5701gkg29ko0lf4a5hpppivmf3a9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYxqz4FpqUoKJ2X5OtM-zMfvQDDvRSyFY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/et_fuel_vendor_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:hint="Fuel Vendor"
+            android:inputType="textCapWords" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/et_fuel_cost_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cost"
+            android:inputType="numberDecimal" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/et_fuel_receipt_number_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Receipt Number"
+            android:inputType="textNoSuggestions|textVisiblePassword|textCapCharacters" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <include
+        android:id="@+id/fuel_cancel_save_button_bar"
+        layout="@layout/cancel_save_button_bar_layout" />
+
+</LinearLayout>

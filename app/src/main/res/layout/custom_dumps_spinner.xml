@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/custom_spinner_layout">
+
+    <!--<ImageView-->
+    <!--android:id="@+id/left_pic"-->
+    <!--android:layout_width="100px"-->
+    <!--android:layout_height="80px"/>-->
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/spinner_text_dump_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColorPrimary"
+        android:padding="20dp"
+        android:textSize="20sp"
+        android:text="DumpName"/>
+
+    <TextView
+        android:id="@+id/spinner_text_dump_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="20dp"
+        android:gravity="end"
+        android:textColor="@color/textColorPrimary"
+        android:text="Ton$" />
+
+</LinearLayout>

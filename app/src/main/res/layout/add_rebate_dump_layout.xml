@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fadeScrollbars="false"
+    android:orientation="vertical"
+    android:theme="@style/CustomDialog">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/material_spinner_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/spinner_rebate_location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:dropDownWidth="@dimen/custom_spinner_width" />
+
+                <Spinner
+                    android:id="@+id/spinner_material_type"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:dropDownWidth="@dimen/custom_spinner_width" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rebate_amount_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_rebate_amount_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Amount ($)"
+                        android:inputType="number" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/enter_rebate_tonnage_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Weight"
+                        android:inputType="numberDecimal" />
+
+                    <Spinner
+                        android:id="@+id/spinner_weight_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/rebate_receipt_number_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Receipt #"
+                        android:inputType="number" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/rebate_percent_previous_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="% Previous"
+                        android:inputType="number" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/rebate_cancel_save_button_bar"
+        layout="@layout/cancel_save_button_bar_layout" />
+
+</LinearLayout>

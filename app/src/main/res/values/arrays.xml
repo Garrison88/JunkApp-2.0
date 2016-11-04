@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<string-array name="dumps_info">-->
+        <!--&lt;!&ndash;Laird&ndash;&gt;-->
+        <!--<item>Location: Laird and Eglington-->
+            <!--\nHours: Monday–Friday 5am-6pm-->
+            <!--\nClosed Saturday-Sunday-->
+            <!--\n-->
+            <!--\n**Remember to wear safety gear**</item>-->
+        <!--&lt;!&ndash;Cherry&ndash;&gt;-->
+        <!--<item>Location: Cherry and Lakeshore-->
+            <!--\nHours: Monday-Friday 4am-9:30pm-->
+            <!--\nSaturday-Sunday 6am-6pm-->
+            <!--\n$40 minimum</item>-->
+        <!--&lt;!&ndash;Shorncliffe&ndash;&gt;-->
+        <!--<item>Location: Bloor and Kipling-->
+            <!--\nHours: Monday–Friday 7am-7pm-->
+            <!--\nSaturday 6am-1pm-->
+            <!--\nClosed Sunday-->
+            <!--\n$25 minimum</item>-->
+        <!--&lt;!&ndash;Fenmar&ndash;&gt;-->
+        <!--<item>Location: Weston and Finch-->
+            <!--\nHours: Monday-Friday 6am-6pm-->
+            <!--\nSaturday 7am-3pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;Miller&ndash;&gt;-->
+        <!--<item>Location: Highway 7 and Warden-->
+            <!--\nHours: Monday-Friday 8am-6pm-->
+            <!--\nSaturday 8am-5pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;Medulla West&ndash;&gt;-->
+        <!--<item>Location: South Etobicoke-->
+            <!--\nHours: Monday-Friday 6am-8pm-->
+            <!--\nSaturday 7am-2pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;Medulla East&ndash;&gt;-->
+        <!--<item>Location: Markham and Sheppard-->
+            <!--\nHours: Unknown</item>-->
+        <!--&lt;!&ndash;GFL Pickering&ndash;&gt;-->
+        <!--<item>Location: 401 and Brock Rd-->
+            <!--\nHours: Monday-Friday 6am-6pm-->
+            <!--\nSaturday 7am-1pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;GFL Etobicoke&ndash;&gt;-->
+        <!--<item>Location: Islington and Rexdale-->
+            <!--\nHours: Monday-Friday 6am-3pm-->
+            <!--\nClosed Saturday-Sunday</item>-->
+        <!--&lt;!&ndash;GFL Mississauga&ndash;&gt;-->
+        <!--<item>Location: 403 and Mavis-->
+            <!--\nHours: Monday-Friday 6am-6pm-->
+            <!--\nClosed Saturday-Sunday</item>-->
+        <!--&lt;!&ndash;WM Etibicoke&ndash;&gt;-->
+        <!--<item>Location: Evans and Islington-->
+            <!--\nHours: Monday-Friday 5am-6pm-->
+            <!--\nSaturday 6am-1pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;WM St Catherines&ndash;&gt;-->
+        <!--<item>Location: QEW and Welland-->
+            <!--\nHours: Monday-Friday 5am-6pm-->
+            <!--\nSaturday 6am-1pm-->
+            <!--\nClosed Sunday</item>-->
+        <!--&lt;!&ndash;WM Hamilton&ndash;&gt;-->
+        <!--<item>Location: Upper Ottawa and Rymal-->
+            <!--\nHours: Monday-Friday 8am-5pm-->
+            <!--\nClosed Saturday-Sunday</item>-->
+        <!--&lt;!&ndash;Mountain Transfer&ndash;&gt;-->
+        <!--<item>Location: Red Hill Valley and QEW-->
+            <!--\nHours: Monday-Friday 8am-5pm-->
+            <!--\nClosed Saturday-Sunday</item>-->
+        <!--&lt;!&ndash;Tor-Can&ndash;&gt;-->
+        <!--<item>Location: Kennedy and 401-->
+            <!--\nHours: 24/7-->
+            <!--\n$65 min-->
+            <!--\n-->
+            <!--\n**Extra $25/tonne after hours and on weekends**</item>-->
+        <!--&lt;!&ndash;Tuff Recycling Inc&ndash;&gt;-->
+        <!--<item>Location: Brampton (Queen St E and 410)-->
+            <!--\nHours: Monday-Friday 6am-6pm-->
+            <!--\nSaturday 6am-1pm-->
+            <!--\nClosed Sunday</item>-->
+    <!--</string-array>-->
+
+    <string-array name="material">
+        <item>Metal</item>
+        <item>Paper</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="rebate_location">
+        <item>Cherry</item>
+        <item>Triple M West</item>
+        <item>Triple M East</item>
+        <item>CMI Fenmar</item>
+        <item>Teperman</item>
+        <item>Cascades</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="string_volume_name">
+        <item>Add Volume</item>
+        <item>1/8</item>
+        <item>1/6</item>
+        <item>1/4</item>
+        <item>1/3</item>
+        <item>3/8</item>
+        <item>1/2</item>
+        <item>5/8</item>
+        <item>2/3</item>
+        <item>3/4</item>
+        <item>7/8</item>
+        <item>Full</item>
+        <item>EXTRAS</item>
+        <item>1 Hr Labour</item>
+        <item>1 Tire</item>
+        <item>Custom</item>
+        <item>DISCOUNTS</item>
+        <item>5% discount</item>
+        <item>10% discount</item>
+        <item>15% discount</item>
+        <item>20% discount</item>
+        <item>$20 discount</item>
+    </string-array>
+
+    <string-array name="end_day_load">
+        <item>Load</item>
+        <item>Empty</item>
+        <item>1/8</item>
+        <item>1/6</item>
+        <item>1/4</item>
+        <item>1/3</item>
+        <item>3/8</item>
+        <item>1/2</item>
+        <item>5/8</item>
+        <item>2/3</item>
+        <item>3/4</item>
+        <item>7/8</item>
+        <item>Full</item>
+    </string-array>
+
+    <string-array name="end_day_fuel">
+        <item>Fuel</item>
+        <item>Empty</item>
+        <item>1/8</item>
+        <item>1/4</item>
+        <item>1/2</item>
+        <item>3/4</item>
+        <item>Full</item>
+    </string-array>
+
+    <integer-array name="string_volume_price">
+        <item>0</item>
+        <!--Volume-->
+        <item>99</item>
+        <item>149</item>
+        <item>189</item>
+        <item>239</item>
+        <item>279</item>
+        <item>309</item>
+        <item>349</item>
+        <item>399</item>
+        <item>429</item>
+        <item>449</item>
+        <item>479</item>
+        <item>0</item>
+        <!--Extras-->
+        <item>99</item>
+        <item>15</item>
+        <item>0</item>
+        <item>0</item>
+        <!--Discounts-->
+        <item>95</item>
+        <item>90</item>
+        <item>85</item>
+        <item>80</item>
+        <item>20</item>
+    </integer-array>
+
+    <string-array name="string_bedload_name">
+        <item>Add Bedload</item>
+        <item>1/16</item>
+        <item>1/8</item>
+        <item>1/4</item>
+        <item>1/2</item>
+        <item>2/3</item>
+        <item>3/4</item>
+        <item>Full</item>
+    </string-array>
+
+    <integer-array name="string_bedload_price">
+        <item>0</item>
+        <item>99</item>
+        <item>159</item>
+        <item>229</item>
+        <item>289</item>
+        <item>329</item>
+        <item>359</item>
+        <item>459</item>
+    </integer-array>
+
+    <string-array name="text_size_entries">
+        <item>16pt</item>
+        <item>18pt</item>
+        <item>20pt</item>
+        <item>22pt</item>
+        <item>24pt</item>
+        <item>26pt</item>
+    </string-array>
+
+    <string-array name="text_size_values">
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+        <item>24</item>
+        <item>26</item>
+    </string-array>
+
+    <string-array name="truck_number">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="job_pay_type">
+        <item>Pay Type</item>
+        <item>Cash</item>
+        <item>Cheque</item>
+        <item>MasterCard</item>
+        <item>Visa</item>
+        <item>Invoice</item>
+        <item>Gift Card</item>
+        <item>Other</item>
+    </string-array>
+
+</resources>

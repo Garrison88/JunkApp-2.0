@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/journal_first_row"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/et_driver"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Driver"
+                        android:inputType="textCapWords" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/driver_start_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_access_time_white_24dp"
+                    android:text="@string/start" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/journal_second_row"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/et_navigator"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Navigator"
+                        android:inputType="textCapWords" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/nav_start_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_access_time_white_24dp"
+                    android:text="@string/start" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="Truck #:" />
+
+                <Spinner
+                    android:id="@+id/truck_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/journal_cancel_save_button_bar"
+        layout="@layout/cancel_save_button_bar_layout" />
+
+</LinearLayout>

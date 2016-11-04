@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/v_q_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/v_q_static_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Low End" />
+
+            <TextView
+                android:id="@+id/vq_high_end_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="High End" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/v_q_net_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_view_quote_low_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_view_quote_high_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_view_quote_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_view_quote_notes_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/v_q_top_layout"
+        android:text="NOTES" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/tv_view_quote_notes_display">
+
+        <ScrollView
+            android:id="@+id/view_quote_notes_sv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/v_j_button_layout"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/tv_view_quote_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/image_view_quote_photo"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <RelativeLayout
+            android:id="@+id/v_j_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/btn_view_quote_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="OK" />
+
+            <ImageButton
+                android:id="@+id/btn_delete_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:src="@drawable/ic_delete_white_36dp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
