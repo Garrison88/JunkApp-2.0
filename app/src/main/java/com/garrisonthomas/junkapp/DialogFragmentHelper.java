@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -28,7 +28,7 @@ import java.util.Locale;
 /**
  * Created by Garrison on 2016-06-11.
  */
-public abstract class DialogFragmentHelper extends DialogFragment {
+public class DialogFragmentHelper extends DialogFragment {
 
     public FirebaseAuth auth = FirebaseAuth.getInstance();
     public Date date = new Date();
@@ -62,7 +62,7 @@ public abstract class DialogFragmentHelper extends DialogFragment {
         }
     }
 
-    public static AlertDialog deleteItem(final DialogFragment df, final String firebaseRef) {
+    public static AlertDialog deleteItem(final DialogFragment df, final String databaseRef) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(df.getActivity());
         builder.setTitle("Delete this entry?")
@@ -71,17 +71,24 @@ public abstract class DialogFragmentHelper extends DialogFragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, int id) {
 
-                        Firebase ref = new Firebase(firebaseRef);
-                        ref.removeValue();
+                        FirebaseDatabase
+                                .getInstance()
+                                .getReference(databaseRef)
+                                .removeValue();
+
                         Toast.makeText(df.getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
+
                         df.dismiss();
 
                     }
 
                 })
+
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
                         dialog.cancel();
+
                     }
                 });
         return builder.create();

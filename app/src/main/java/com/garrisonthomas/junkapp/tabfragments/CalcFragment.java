@@ -357,12 +357,12 @@ public class CalcFragment extends Fragment {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-        outState.putString("tab", "CalcFragment"); //save the tab selected
-
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//
+//        super.onSaveInstanceState(outState);
+//        outState.putString("tab", "CalcFragment"); //save the tab selected
+//
+//    }
 
 }

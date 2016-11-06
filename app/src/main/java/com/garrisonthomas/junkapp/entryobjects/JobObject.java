@@ -1,12 +1,8 @@
 package com.garrisonthomas.junkapp.entryobjects;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  * Created by Garrison on 2016-08-06.
  */
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class JobObject {
 

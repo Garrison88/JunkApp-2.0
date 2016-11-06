@@ -19,11 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.garrisonthomas.junkapp.DumpTabDialogFragment;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.Utils;
@@ -42,6 +37,12 @@ import com.garrisonthomas.junkapp.entryobjects.RebateObject;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -98,8 +99,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
     private String spNavigator;
     private String currentJournalRef;
 
-    private Firebase infoRef;
-    private static Firebase jobs;
+    private DatabaseReference infoRef;
 
     private int selectedJobSID, selectedQuoteSID, dumpReceiptNumber, totalGrossProfit, totalDumpCost;
 
@@ -114,7 +114,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
     private NumberFormat currencyFormat;
 
-    private ChildEventListener jobsListener, dumpsListener, rebateListener;
+//    private ChildEventListener jobsListener, dumpsListener, rebateListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,172 +130,183 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        String currentJournalInfoRef = currentJournalRef + "info";
+        infoRef = FirebaseDatabase
+                .getInstance()
+                .getReference(currentJournalRef + "info");
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         if (currentJournalRef != null) {
 
-            infoRef = new Firebase(currentJournalInfoRef);
-
             // populate spinners
-            jobs = new Firebase(currentJournalRef + "jobs");
+            DatabaseReference jobs = FirebaseDatabase.getInstance().getReference(currentJournalRef + "jobs");
             Utils.populateIntegerSpinner(getActivity(), jobs, jobsArray, jobsSpinner);
-            Firebase quotes = new Firebase(currentJournalRef + "quotes");
+            DatabaseReference quotes = FirebaseDatabase.getInstance().getReference(currentJournalRef + "quotes");
             Utils.populateIntegerSpinner(getActivity(), quotes, quotesArray, quotesSpinner);
-            Firebase dumps = new Firebase(currentJournalRef + "dumps");
+            DatabaseReference dumps = FirebaseDatabase.getInstance().getReference(currentJournalRef + "dumps");
             Utils.populateStringSpinner(getActivity(), dumps, dumpsArray, dumpsSpinner);
-            Firebase fuel = new Firebase(currentJournalRef + "fuel");
+            DatabaseReference fuel = FirebaseDatabase.getInstance().getReference(currentJournalRef + "fuel");
             Utils.populateStringSpinner(getActivity(), fuel, fuelArray, fuelSpinner);
 
-            final Firebase rebate = new Firebase(currentJournalRef + "rebate");
-
             //query grossSale children of SID nodes to find real-time daily profit
-            jobsListener = jobs.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(currentJournalRef + "jobs")
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                    JobObject jobObject = dataSnapshot.getValue(JobObject.class);
+                            JobObject jobObject = dataSnapshot.getValue(JobObject.class);
 
-                    totalGrossProfit += Math.round(jobObject.getGrossSale());
+                            totalGrossProfit += Math.round(jobObject.getGrossSale());
 
-                    updateUI();
+                            updateUI();
 
-                }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        }
 
-                }
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        }
 
-                    JobObject jobObject = dataSnapshot.getValue(JobObject.class);
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                    totalGrossProfit -= Math.round(jobObject.getGrossSale());
+                            JobObject jobObject = dataSnapshot.getValue(JobObject.class);
 
-                    updateUI();
+                            totalGrossProfit -= Math.round(jobObject.getGrossSale());
 
-                }
+                            updateUI();
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        }
 
-                }
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
+                        }
 
-                }
-            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-            // query dumps and rebate to find percentOnDumps
-            dumpsListener = dumps.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    DumpObject dumpObject = dataSnapshot.getValue(DumpObject.class);
-
-                    totalDumpCost += (dumpObject.getPercentPrevious() != 0)
-                            ? Math.round(dumpObject.getGrossCost() * ((100 - dumpObject.getPercentPrevious()) * 0.01))
-                            : Math.round(dumpObject.getGrossCost());
-
-                    updateUI();
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    DumpObject dumpObject = dataSnapshot.getValue(DumpObject.class);
-
-                    totalDumpCost -= (dumpObject.getPercentPrevious() != 0)
-                            ? Math.round(dumpObject.getGrossCost() * ((100 - dumpObject.getPercentPrevious()) * 0.01))
-                            : Math.round(dumpObject.getGrossCost());
-
-                    updateUI();
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
+                        }
+                    });
 
             // query dumps and rebate to find percentOnDumps
-            rebateListener = rebate.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(currentJournalRef + "dumps")
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                    RebateObject rebateObject = dataSnapshot.getValue(RebateObject.class);
+                            DumpObject dumpObject = dataSnapshot.getValue(DumpObject.class);
 
-                    totalDumpCost -= (rebateObject.getPercentPrevious() != 0)
-                            ? Math.round(rebateObject.getRebateAmount() * ((100 - rebateObject.getPercentPrevious()) * 0.01))
-                            : Math.round(rebateObject.getRebateAmount());
+                            totalDumpCost += (dumpObject.getPercentPrevious() != 0)
+                                    ? Math.round(dumpObject.getGrossCost() * ((100 - dumpObject.getPercentPrevious()) * 0.01))
+                                    : Math.round(dumpObject.getGrossCost());
 
-                    updateUI();
-                }
+                            updateUI();
+                        }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                }
+                        }
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                    RebateObject rebateObject = dataSnapshot.getValue(RebateObject.class);
+                            DumpObject dumpObject = dataSnapshot.getValue(DumpObject.class);
 
-                    totalDumpCost += (rebateObject.getPercentPrevious() != 0)
-                            ? Math.round(rebateObject.getRebateAmount() * ((100 - rebateObject.getPercentPrevious()) * 0.01))
-                            : Math.round(rebateObject.getRebateAmount());
+                            totalDumpCost -= (dumpObject.getPercentPrevious() != 0)
+                                    ? Math.round(dumpObject.getGrossCost() * ((100 - dumpObject.getPercentPrevious()) * 0.01))
+                                    : Math.round(dumpObject.getGrossCost());
 
-                    updateUI();
+                            updateUI();
 
-                }
+                        }
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                }
+                        }
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError firebaseError) {
 
-                }
-            });
+                        }
+                    });
+
+            // query dumps and rebate to find percentOnDumps
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(currentJournalRef + "rebate")
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                            RebateObject rebateObject = dataSnapshot.getValue(RebateObject.class);
+
+                            totalDumpCost -= (rebateObject.getPercentPrevious() != 0)
+                                    ? Math.round(rebateObject.getRebateAmount() * ((100 - rebateObject.getPercentPrevious()) * 0.01))
+                                    : Math.round(rebateObject.getRebateAmount());
+
+                            updateUI();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                            RebateObject rebateObject = dataSnapshot.getValue(RebateObject.class);
+
+                            totalDumpCost += (rebateObject.getPercentPrevious() != 0)
+                                    ? Math.round(rebateObject.getRebateAmount() * ((100 - rebateObject.getPercentPrevious()) * 0.01))
+                                    : Math.round(rebateObject.getRebateAmount());
+
+                            updateUI();
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError firebaseError) {
+
+                        }
+                    });
 
             //query database to find driver, nav, and truck number and set them
-            Firebase journalInfo = new Firebase(currentJournalInfoRef);
-            journalInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(currentJournalRef + "info")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    DailyJournalObject djObject = dataSnapshot.getValue(DailyJournalObject.class);
-                    spDriver = djObject.getDriver();
-                    spNavigator = djObject.getNavigator();
-                    String truckString = "Truck " + djObject.getTruckNumber();
-                    String crewString = "Driver: " + spDriver + "\n" + "Nav: " + spNavigator;
-                    todaysCrew.setText(crewString);
-                    todaysTruck.setText(truckString);
-                }
+                            DailyJournalObject djObject = dataSnapshot.getValue(DailyJournalObject.class);
+                            spDriver = djObject.getDriver();
+                            spNavigator = djObject.getNavigator();
+                            String truckString = "Truck " + djObject.getTruckNumber();
+                            String crewString = "Driver: " + spDriver + "\n" + "Nav: " + spNavigator;
+                            todaysCrew.setText(crewString);
+                            todaysTruck.setText(truckString);
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
+                        }
 
-                }
-            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
             jobsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -387,6 +398,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                     } else {
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
+
                         Fragment prev = getFragmentManager().findFragmentByTag("fragCreateJournal");
                         if (prev != null) {
                             ft.remove(prev);
@@ -421,8 +433,15 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
     public String POG(int TGP) {
 
-        infoRef.child("totalGrossProfit").setValue(TGP);
-        infoRef.child("percentOfGoal").setValue(Math.round(100 * (TGP / 1400f)));
+
+        infoRef
+                .child("totalGrossProfit")
+                .setValue(TGP);
+
+        infoRef
+                .child("percentOfGoal")
+                .setValue(Math.round(100 * (TGP / 1400f)));
+
         return (TGP > 1)
                 ? " (" + String.valueOf(Math.round(100 * (TGP / 1400f))) + "%)"
                 : "";
@@ -431,10 +450,16 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
     public String POD(int TDC, int TGP) {
 
-        infoRef.child("totalDumpCost").setValue(TDC);
-        infoRef.child("percentOnDumps").setValue(TGP > 1
-                ? Math.round((100 * (TDC / (float) TGP)))
-                : 0);
+        infoRef
+                .child("totalDumpCost")
+                .setValue(TDC);
+
+        infoRef
+                .child("percentOnDumps")
+                .setValue(TGP > 1
+                        ? Math.round((100 * (TDC / (float) TGP)))
+                        : 0);
+
         return (TGP > 1 && TDC > 1)
                 ? " (" + String.valueOf(Math.round((100 * (TDC / (float) TGP)))) + "%)"
                 : "";
@@ -593,12 +618,12 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-        outState.putString("tab", "JournalFragment"); //save the tab selected
-
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//
+//        super.onSaveInstanceState(outState);
+//        outState.putString("tab", "JournalFragment"); //save the tab selected
+//
+//    }
 
 }

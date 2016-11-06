@@ -22,13 +22,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.TabsActivity;
 import com.garrisonthomas.junkapp.entryobjects.DumpObject;
 import com.garrisonthomas.junkapp.entryobjects.TransferStationObject;
 import com.garrisonthomas.junkapp.inputFilters.InputFilterMinMax;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -154,9 +154,6 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                         && !etAddDumpWeight.getText().toString().equals(".")
                         && (!TextUtils.isEmpty(etDumpReceiptNumber.getText()))) {
 
-                    Firebase fbrDump = new Firebase(currentJournalRef + "dumps/" + dumpNameString + " (" +
-                            String.valueOf(etDumpReceiptNumber.getText()) + ")");
-
                     DumpObject dump = new DumpObject();
 
                     dump.setDumpName(dumpNameString);
@@ -171,7 +168,11 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                             ? Integer.valueOf(String.valueOf(etPercentPrevious.getText()))
                             : 0);
 
-                    fbrDump.setValue(dump);
+                    FirebaseDatabase
+                            .getInstance()
+                            .getReference(currentJournalRef + "dumps/" + dumpNameString + " (" +
+                                    String.valueOf(etDumpReceiptNumber.getText()) + ")")
+                            .setValue(dump);
 
                     Toast.makeText(getActivity(), "Dump at " + dumpNameString + " saved", Toast.LENGTH_SHORT).show();
 

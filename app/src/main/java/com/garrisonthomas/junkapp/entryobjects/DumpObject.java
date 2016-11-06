@@ -4,8 +4,6 @@ package com.garrisonthomas.junkapp.entryobjects;
  * Created by Garrison on 2016-08-08.
  */
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
-
 public class DumpObject {
 
     private String dumpName;

@@ -14,10 +14,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.FuelObject;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AddFuelDialogFragment extends DialogFragmentHelper {
 
@@ -57,16 +57,17 @@ public class AddFuelDialogFragment extends DialogFragmentHelper {
                         && !TextUtils.isEmpty(etFuelCost.getText())
                         && !TextUtils.isEmpty(etReceiptNumber.getText())) {
 
-                    Firebase fbrFuel = new Firebase(currentJournalRef + "fuel/"
-                            + String.valueOf(etReceiptNumber.getText()));
-
                     FuelObject fuel = new FuelObject();
 
                     fuel.setFuelVendor(String.valueOf(etFuelVendor.getText()));
                     fuel.setFuelCost(Double.valueOf(String.valueOf(etFuelCost.getText())));
                     fuel.setFuelReceiptNumber(String.valueOf(etReceiptNumber.getText()));
 
-                    fbrFuel.setValue(fuel);
+                    FirebaseDatabase
+                            .getInstance()
+                            .getReference(currentJournalRef + "fuel/"
+                                    + String.valueOf(etReceiptNumber.getText()))
+                            .setValue(fuel);
 
                     Toast.makeText(getActivity(), "Fuel entry at " + String.valueOf(etFuelVendor.getText()) +
                             " saved", Toast.LENGTH_SHORT).show();

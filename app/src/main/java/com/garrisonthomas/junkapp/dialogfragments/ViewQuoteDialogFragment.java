@@ -11,15 +11,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.QuoteObject;
 import com.garrisonthomas.junkapp.interfaces.ViewItem;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +44,7 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
     Button okBtn;
     @Bind(R.id.btn_delete_quote)
     ImageButton deleteQuoteBtn;
-//    @Bind(R.id.image_view_quote_photo)
+    //    @Bind(R.id.image_view_quote_photo)
 //    ImageView ivQuotePhoto;
     private int vqSID;
     private String firebaseJournalRef;
@@ -105,17 +104,20 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
 
     public void populateItemInfo() {
 
-        Firebase ref = new Firebase(firebaseJournalRef + "quotes");
-        Query queryRef = ref.orderByChild("quoteSID").equalTo(vqSID);
-        queryRef.addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(firebaseJournalRef + "quotes")
+                .orderByChild("quoteSID")
+                .equalTo(vqSID)
+                .addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                    @Override
+                    public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
 
-                QuoteObject quoteObject = snapshot.getValue(QuoteObject.class);
+                        QuoteObject quoteObject = snapshot.getValue(QuoteObject.class);
 
-                String highEndString = currencyFormat.format(quoteObject.getHighEnd());
-                String lowEndString = currencyFormat.format(quoteObject.getLowEnd());
+                        String highEndString = currencyFormat.format(quoteObject.getHighEnd());
+                        String lowEndString = currencyFormat.format(quoteObject.getLowEnd());
 
 //                if(quoteObject.getPhotoDownloadUrl() != null) {
 //                    Picasso.with(getContext())
@@ -124,45 +126,45 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
 //                            .into(ivQuotePhoto);
 //                }
 
-                if (quoteObject.getHighEnd() != 0) {
-                    vqHighEnd.setVisibility(View.VISIBLE);
-                    vqHighEndDisplay.setVisibility(View.VISIBLE);
-                    vqHighEnd.setText(highEndString);
-                }
-                String startEndTime = quoteObject.getQuoteTime();
-                vqLowEnd.setText(lowEndString);
-                vqTime.setText(startEndTime);
+                        if (quoteObject.getHighEnd() != 0) {
+                            vqHighEnd.setVisibility(View.VISIBLE);
+                            vqHighEndDisplay.setVisibility(View.VISIBLE);
+                            vqHighEnd.setText(highEndString);
+                        }
+                        String startEndTime = quoteObject.getQuoteTime();
+                        vqLowEnd.setText(lowEndString);
+                        vqTime.setText(startEndTime);
 
-                if (!TextUtils.isEmpty(quoteObject.getQuoteNotes())) {
-                    vqNotes.setText(quoteObject.getQuoteNotes());
-                    tvQuoteNotesDisplay.setVisibility(View.VISIBLE);
-                    vqNotes.setVisibility(View.VISIBLE);
+                        if (!TextUtils.isEmpty(quoteObject.getQuoteNotes())) {
+                            vqNotes.setText(quoteObject.getQuoteNotes());
+                            tvQuoteNotesDisplay.setVisibility(View.VISIBLE);
+                            vqNotes.setVisibility(View.VISIBLE);
 
-                }
+                        }
 
-            }
+                    }
 
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
 }

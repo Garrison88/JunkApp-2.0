@@ -4,16 +4,16 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
 public abstract class Utils {
 
-    public static void populateIntegerSpinner(final Context context, final Firebase firebase,
+    public static void populateIntegerSpinner(final Context context, final DatabaseReference firebase,
                                               final ArrayList<Integer> arrayList, final Spinner spinner) {
 
         firebase.addChildEventListener(new ChildEventListener() {
@@ -51,7 +51,7 @@ public abstract class Utils {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
@@ -59,7 +59,7 @@ public abstract class Utils {
     }
 
 
-    public static void populateStringSpinner(final Context context, final Firebase firebase,
+    public static void populateStringSpinner(final Context context, final DatabaseReference firebase,
                                              final ArrayList<String> arrayList, final Spinner spinner) {
 
         firebase.addChildEventListener(new ChildEventListener() {
@@ -97,7 +97,7 @@ public abstract class Utils {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
@@ -109,9 +109,6 @@ public abstract class Utils {
         return Math.round((grossSale * 1.13) * 100.00) / 100.00;
 
     }
-
-
-
 
 
 }

@@ -28,12 +28,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.QuoteObject;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -157,8 +157,6 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                                 String downloadUrlString = taskSnapshot.getDownloadUrl().toString();
 
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                Firebase fbrQuote = new Firebase(currentJournalRef + "quotes/" + String.valueOf(etQuoteSID.getText()));
-
 
                                 quote.setPhotoDownloadUrl(downloadUrlString);
                                 quote.setQuoteSID(Integer.valueOf(etQuoteSID.getText().toString()));
@@ -171,7 +169,10 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                                         ? String.valueOf(etQuoteNotes.getText())
                                         : null);
 
-                                fbrQuote.setValue(quote);
+                                FirebaseDatabase.getInstance()
+                                        .getReference(currentJournalRef + "quotes/"
+                                                + String.valueOf(etQuoteSID.getText()))
+                                        .setValue(quote);
 
                                 Toast.makeText(getActivity(), "Quote number " + etQuoteSID.getText().toString() + " saved",
                                         Toast.LENGTH_SHORT).show();
@@ -184,7 +185,6 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                             }
                         });
                     } else {
-                        Firebase fbrQuote = new Firebase(currentJournalRef + "quotes/" + String.valueOf(etQuoteSID.getText()));
 
                         quote.setQuoteSID(Integer.valueOf(etQuoteSID.getText().toString()));
                         quote.setQuoteTime(quoteTime);
@@ -196,7 +196,10 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                                 ? String.valueOf(etQuoteNotes.getText())
                                 : null);
 
-                        fbrQuote.setValue(quote);
+                        FirebaseDatabase.getInstance()
+                                .getReference(currentJournalRef + "quotes/"
+                                        + String.valueOf(etQuoteSID.getText()))
+                                .setValue(quote);
 
                         Toast.makeText(getActivity(), "Quote number " + etQuoteSID.getText().toString() + " saved",
                                 Toast.LENGTH_SHORT).show();

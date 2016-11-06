@@ -31,7 +31,7 @@ public class DumpFragment extends Fragment {
 
     private Spinner dumpsSpinner;
     private Button infoBtn, dirBtn, calcBtn, dumpsClearBtn;
-    private ArrayList<TransferStationObject> transferStationObjectArrayList;
+    private ArrayList<TransferStationObject> transferStationObjectArrayList = TabsActivity.getTransferStationArrayList();
     private ArrayList<String> dumpNameArray = new ArrayList<>();
     private double selectedDumpRate;
     private EditText etDumpCost;
@@ -59,8 +59,6 @@ public class DumpFragment extends Fragment {
 
         etDumpCost = (EditText) v.findViewById(R.id.et_dump_cost);
         tvDumpCost = (TextView) v.findViewById(R.id.tv_dump_cost);
-
-        transferStationObjectArrayList = TabsActivity.getTransferStationArrayList();
 
         for (TransferStationObject x : transferStationObjectArrayList) {
 
@@ -213,12 +211,12 @@ public class DumpFragment extends Fragment {
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-        outState.putString("tab", "DumpFragment"); //save the tab selected
-
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//
+//        super.onSaveInstanceState(outState);
+//        outState.putString("tab", "DumpFragment"); //save the tab selected
+//
+//    }
 
 }

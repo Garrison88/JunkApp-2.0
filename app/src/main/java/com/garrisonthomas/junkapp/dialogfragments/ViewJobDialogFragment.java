@@ -10,15 +10,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.JobObject;
 import com.garrisonthomas.junkapp.interfaces.ViewItem;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,59 +99,62 @@ public class ViewJobDialogFragment extends DialogFragmentHelper implements ViewI
 
     public void populateItemInfo() {
 
-        Firebase ref = new Firebase(firebaseJournalRef + "jobs");
-        Query queryRef = ref.orderByChild("sid").equalTo(vjSID);
-        queryRef.addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(firebaseJournalRef + "jobs")
+                .orderByChild("sid")
+                .equalTo(vjSID)
+                .addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                    @Override
+                    public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
 
-                JobObject jobObject = snapshot.getValue(JobObject.class);
+                        JobObject jobObject = snapshot.getValue(JobObject.class);
 
-                String gross = currencyFormat.format(jobObject.getGrossSale());
-                String net = currencyFormat.format(jobObject.getNetSale());
+                        String gross = currencyFormat.format(jobObject.getGrossSale());
+                        String net = currencyFormat.format(jobObject.getNetSale());
 
-                vjGross.setText(gross);
-                vjNet.setText(net);
+                        vjGross.setText(gross);
+                        vjNet.setText(net);
 
-                vjPayType.setText(jobObject.getPayType());
-                if (jobObject.getJobType() != null) {
-                    tvJobTypeDisplay.setVisibility(View.VISIBLE);
-                    vjJobType.setVisibility(View.VISIBLE);
-                    vjJobType.setText(jobObject.getJobType());
-                }
-                vjJobType.setText(jobObject.getJobType());
-                vjTime.setText(jobObject.getTime());
-                vjReceiptNumber.setText(String.valueOf(jobObject.getReceiptNumber()));
-                // if there are no notes, do not display them
-                if (jobObject.getJobNotes() != null) {
-                    tvNotesDisplay.setVisibility(View.VISIBLE);
-                    vjNotes.setVisibility(View.VISIBLE);
-                    vjNotes.setText(jobObject.getJobNotes());
-                }
+                        vjPayType.setText(jobObject.getPayType());
+                        if (jobObject.getJobType() != null) {
+                            tvJobTypeDisplay.setVisibility(View.VISIBLE);
+                            vjJobType.setVisibility(View.VISIBLE);
+                            vjJobType.setText(jobObject.getJobType());
+                        }
+                        vjJobType.setText(jobObject.getJobType());
+                        vjTime.setText(jobObject.getTime());
+                        vjReceiptNumber.setText(String.valueOf(jobObject.getReceiptNumber()));
+                        // if there are no notes, do not display them
+                        if (jobObject.getJobNotes() != null) {
+                            tvNotesDisplay.setVisibility(View.VISIBLE);
+                            vjNotes.setVisibility(View.VISIBLE);
+                            vjNotes.setText(jobObject.getJobNotes());
+                        }
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
 
-            }
-        });
+                    }
+                });
 
     }
 }

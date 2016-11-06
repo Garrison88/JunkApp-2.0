@@ -20,17 +20,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.TabsActivity;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
 
     private SharedPreferences preferences;
     private EditText endOfDayNotes;
-    private Button cancel, archive, dEndTime, nEndTime;
+    private Button dEndTime, nEndTime;
     private String currentJournalRef, driver, navigator, loadString, fuelString;
     private String[] endLoadArray, endFuelArray;
     private ProgressDialog pDialog;
@@ -40,11 +41,6 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setTitle("Archive Journal");
-
-//        Bundle eodBundle = getArguments();
-//
-//        driver = eodBundle.getString("driver");
-//        navigator = eodBundle.getString("navigator");
 
         dialog.setCanceledOnTouchOutside(false);
 
@@ -73,9 +69,9 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
         nEndTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.archive_cancel_save_button_bar);
-        archive = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
+        Button archive = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
         archive.setText("ARCHIVE");
-        cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         endLoadArray = v.getResources().getStringArray(R.array.end_day_load);
         endFuelArray = v.getResources().getStringArray(R.array.end_day_fuel);
@@ -120,14 +116,14 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
         dEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createTimePickerDialog(getActivity(), dEndTime, "Driver Out").show();
+                createTimePickerDialog(getActivity(), dEndTime, driver + " Out").show();
             }
         });
 
         nEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createTimePickerDialog(getActivity(), nEndTime, "Nav Out").show();
+                createTimePickerDialog(getActivity(), nEndTime, navigator + " Out").show();
             }
         });
 
@@ -202,19 +198,17 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
         pDialog = ProgressDialog.show(getActivity(), null,
                 "Archiving journal...", true);
 
-        Firebase fbrJournal = new Firebase(currentJournalRef + "info");
+        DatabaseReference fbrJournal = FirebaseDatabase.getInstance()
+                .getReference(currentJournalRef + "info");
 
         fbrJournal.child("driverEndTime").setValue(DET);
         fbrJournal.child("navEndTime").setValue(NET);
-//        fbrJournal.child("percentOfGoal").setValue(percentOfGoal);
-//        fbrJournal.child("totalGrossProfit").setValue(totalGrossProfit);
-//        fbrJournal.child("percentOnDumps").setValue(percentOnDumps);
-//        fbrJournal.child("totalDumpCost").setValue(totalDumpCost);
         fbrJournal.child("endOfDayNotes").setValue("Load: " + loadString + ". Fuel: " + fuelString +
                 ". Notes: " + endOfDayNotes.getText().toString());
-        fbrJournal.child("archived").setValue(true, new Firebase.CompletionListener() {
+        fbrJournal.child("archived").setValue(true, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("currentJournalRef", null);
                 editor.putString("driver", null);
@@ -228,7 +222,9 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
                 pDialog.dismiss();
 
                 dismiss();
+
             }
         });
     }
 }
+

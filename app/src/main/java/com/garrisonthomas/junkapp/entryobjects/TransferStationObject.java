@@ -6,8 +6,9 @@ package com.garrisonthomas.junkapp.entryobjects;
 
 public class TransferStationObject {
 
-    private String address, info, name, phoneNumber;
+    private String address, info, name;
     private int minimum;
+    private long phoneNumber;
     private double rate;
 
     public TransferStationObject() {
@@ -40,11 +41,11 @@ public class TransferStationObject {
         this.info = info;
     }
 
-    public String getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

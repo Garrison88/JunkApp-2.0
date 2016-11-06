@@ -9,15 +9,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.DumpObject;
 import com.garrisonthomas.junkapp.interfaces.ViewItem;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -90,53 +89,56 @@ public class ViewDumpDialogFragment extends DialogFragmentHelper implements View
 
     public void populateItemInfo() {
 
-        Firebase ref = new Firebase(currentJournalRef + "dumps");
-        Query queryRef = ref.orderByChild("dumpReceiptNumber").equalTo(dumpReceiptNumber);
-        queryRef.addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(currentJournalRef + "dumps")
+                .orderByChild("dumpReceiptNumber")
+                .equalTo(dumpReceiptNumber)
+                .addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                    @Override
+                    public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
 
-                DumpObject dumpObject = snapshot.getValue(DumpObject.class);
+                        DumpObject dumpObject = snapshot.getValue(DumpObject.class);
 
-                double previousAmount;
-                String previousAmountString;
+                        double previousAmount;
+                        String previousAmountString;
 
-                String gross = currencyFormat.format(dumpObject.getGrossCost());
+                        String gross = currencyFormat.format(dumpObject.getGrossCost());
 
-                vdGross.setText(gross);
-                vdTonnage.setText(String.valueOf(dumpObject.getTonnage()));
-                if (dumpObject.getPercentPrevious() != 0) {
-                    previousAmount = Math.round(dumpObject.getGrossCost() * (dumpObject.getPercentPrevious() * .01) * 100.00) / 100.00;
-                    previousAmountString = currencyFormat.format(previousAmount);
-                    vdPercentPrevious.setText(String.valueOf(dumpObject.getPercentPrevious()) + "%"
-                            + "\n" + "(" + previousAmountString + ")");
-                    vdPercentPreviousText.setVisibility(View.VISIBLE);
-                    vdPercentPrevious.setVisibility(View.VISIBLE);
-                }
+                        vdGross.setText(gross);
+                        vdTonnage.setText(String.valueOf(dumpObject.getTonnage()));
+                        if (dumpObject.getPercentPrevious() != 0) {
+                            previousAmount = Math.round(dumpObject.getGrossCost() * (dumpObject.getPercentPrevious() * .01) * 100.00) / 100.00;
+                            previousAmountString = currencyFormat.format(previousAmount);
+                            vdPercentPrevious.setText(String.valueOf(dumpObject.getPercentPrevious()) + "%"
+                                    + "\n" + "(" + previousAmountString + ")");
+                            vdPercentPreviousText.setVisibility(View.VISIBLE);
+                            vdPercentPrevious.setVisibility(View.VISIBLE);
+                        }
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
 }

@@ -30,13 +30,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.Utils;
 import com.garrisonthomas.junkapp.entryobjects.JobObject;
 import com.garrisonthomas.junkapp.inputFilters.ExpDateFormatWatcher;
 import com.garrisonthomas.junkapp.inputFilters.FourDigitCardFormatWatcher;
+import com.google.firebase.database.FirebaseDatabase;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
@@ -187,12 +187,11 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                         && (validateEditTextLength(etReceiptNumber, 5, 5) || !etReceiptNumber.isEnabled())
                         && (payTypeSpinner.getSelectedItemPosition() != 0) || !payTypeSpinner.isEnabled()) {
 
-                    Firebase fbrJob = new Firebase(currentJournalRef + "jobs/" + String.valueOf(etSID.getText()));
-
                     JobObject job = new JobObject();
 
                     String timeString = String.valueOf(startTime.getText()) + "-" + String.valueOf(endTime.getText());
-                    job.setSID(Integer.valueOf(String.valueOf(etSID.getText())));
+                    int SID = Integer.valueOf(String.valueOf(etSID.getText()));
+                    job.setSID(SID);
                     job.setTime(timeString);
                     job.setJobNotes(String.valueOf(etJobNotes.getText()));
 
@@ -217,9 +216,13 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                     job.setCcNumber(creditCardNumber);
                     job.setCcExpDate(creditCardExpDate);
 
-                    fbrJob.setValue(job);
+                    FirebaseDatabase
+                            .getInstance()
+                            .getReference(currentJournalRef + "jobs/"
+                                    + String.valueOf(SID))
+                            .setValue(job);
 
-                    Toast.makeText(getActivity(), "Job number " + etSID.getText().toString() + " saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Job number " + String.valueOf(SID) + " saved", Toast.LENGTH_SHORT).show();
 
                     dismiss();
 

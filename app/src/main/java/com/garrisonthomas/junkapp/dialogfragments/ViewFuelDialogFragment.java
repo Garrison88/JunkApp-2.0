@@ -10,15 +10,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.FuelObject;
 import com.garrisonthomas.junkapp.interfaces.ViewItem;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -83,40 +82,43 @@ public class ViewFuelDialogFragment extends DialogFragmentHelper implements View
 
     public void populateItemInfo() {
 
-        Firebase ref = new Firebase(firebaseJournalRef + "/fuel");
-        Query queryRef = ref.orderByChild("fuelReceiptNumber").equalTo(fuelReceiptNumber);
-        queryRef.addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(firebaseJournalRef + "/fuel")
+                .orderByChild("fuelReceiptNumber")
+                .equalTo(fuelReceiptNumber)
+                .addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                    @Override
+                    public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
 
-                FuelObject fuelObject = snapshot.getValue(FuelObject.class);
+                        FuelObject fuelObject = snapshot.getValue(FuelObject.class);
 
-                vfVendor.setText(String.valueOf(fuelObject.getFuelVendor()));
-                vfCost.setText(currencyFormat.format(fuelObject.getFuelCost()));
+                        vfVendor.setText(String.valueOf(fuelObject.getFuelVendor()));
+                        vfCost.setText(currencyFormat.format(fuelObject.getFuelCost()));
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
 
-            }
-        });
+                    }
+                });
 
     }
 

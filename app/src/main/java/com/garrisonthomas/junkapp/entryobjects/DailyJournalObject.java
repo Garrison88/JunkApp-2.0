@@ -1,18 +1,19 @@
 package com.garrisonthomas.junkapp.entryobjects;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by Garrison on 2016-08-07.
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-
 public class DailyJournalObject {
 
     private String driver, driverStartTime, driverEndTime, navigator, navStartTime, navEndTime,
             endOfDayNotes, date, truckNumber;
+    @Exclude
     private int percentOfGoal, percentOnDumps, totalGrossProfit, totalDumpCost;
+//    @Exclude
     private boolean isArchived;
 
     public DailyJournalObject() {

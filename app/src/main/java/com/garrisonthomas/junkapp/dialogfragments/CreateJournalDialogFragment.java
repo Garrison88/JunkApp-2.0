@@ -18,26 +18,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.garrisonthomas.junkapp.App;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.TabsActivity;
 import com.garrisonthomas.junkapp.entryobjects.DailyJournalObject;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
     private Spinner truckSpinner;
     private String[] truckArray;
-    private Button cancel, createJournal, dStartTime, nStartTime;
+    private Button dStartTime, nStartTime;
     private EditText etDriver, etNavigator;
     private String truckSelected, currentJournalString;
     private SharedPreferences preferences;
     private ProgressDialog pDialog;
-    private Firebase currentJournalRef;
+    private DatabaseReference currentJournalRef;
     private boolean journalExists;
     TextView errorText;
 
@@ -71,20 +71,41 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
         truckSpinner = (Spinner) v.findViewById(R.id.truck_spinner);
         truckArray = v.getResources().getStringArray(R.array.truck_number);
 
+//        errorText = (TextView) truckSpinner.getSelectedView();
+//        errorText.setError("");
+
         dStartTime = (Button) v.findViewById(R.id.driver_start_time);
         dStartTime.setTransformationMethod(null);
         nStartTime = (Button) v.findViewById(R.id.nav_start_time);
         nStartTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.journal_cancel_save_button_bar);
-        createJournal = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
+        Button createJournal = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
         createJournal.setText("CREATE");
-        cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         journalExists = true;
 
         etDriver = (EditText) v.findViewById(R.id.et_driver);
         etNavigator = (EditText) v.findViewById(R.id.et_navigator);
+
+//        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+//        connectedRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                boolean connected = snapshot.getValue(Boolean.class);
+//                if (connected) {
+//                    System.out.println("connected");
+//                } else {
+//                    System.out.println("not connected");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                System.err.println("Listener was cancelled");
+//            }
+//        });
 
         truckSpinner.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, truckArray));
@@ -93,39 +114,38 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
-//                journalExists = true;
-
                 truckSelected = truckArray[position];
 
-                currentJournalString = App.FIREBASE_URL + "journals/" +
+                currentJournalString = "journals/" +
                         currentYear + "/" + currentMonth + "/" + currentDay + "/T" + truckSelected + "/";
 
-                currentJournalRef = new Firebase(currentJournalString);
+                FirebaseDatabase
+                        .getInstance()
+                        .getReference(currentJournalString)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
 
-                currentJournalRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
 
-                        if (snapshot.exists()) {
+                                    errorText = (TextView) truckSpinner.getSelectedView();
+                                    errorText.setError("");
+                                    journalExists = true;
 
-                            errorText = (TextView) truckSpinner.getSelectedView();
-                            errorText.setError("");
-                            journalExists = true;
+                                } else if (!snapshot.exists()) {
 
-                        } else if (!snapshot.exists()) {
+                                    errorText = (TextView) truckSpinner.getSelectedView();
+                                    errorText.setError(null);
+                                    journalExists = false;
 
-                            errorText = (TextView) truckSpinner.getSelectedView();
-                            errorText.setError(null);
-                            journalExists = false;
+                                }
+                            }
 
-                        }
-                    }
+                            @Override
+                            public void onCancelled(DatabaseError firebaseError) {
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
+                            }
+                        });
 
 //                }
             }
@@ -206,33 +226,36 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
         journal.setNavStartTime(navST);
         journal.setTruckNumber(truckSelected);
 
-        Firebase firebaseRef = new Firebase(currentJournalString + "info");
+//        DatabaseReference firebaseRef = ;
 
-        firebaseRef.setValue(journal, new Firebase.CompletionListener() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(currentJournalString + "info")
+                .setValue(journal, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        if (databaseError != null) {
 
-                if (firebaseError != null) {
+                            System.out.println("Data could not be saved. " + databaseError.getMessage());
 
-                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
+                        } else {
 
-                } else {
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(getString(R.string.sp_current_journal_ref), currentJournalString);
+                            editor.putString("driver", driverString);
+                            editor.putString("navigator", navigatorString);
+                            editor.apply();
 
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(getString(R.string.sp_current_journal_ref), currentJournalString);
-                    editor.putString("driver", driverString);
-                    editor.putString("navigator", navigatorString);
-                    editor.apply();
+                            ((TabsActivity) getActivity()).notifyJournalChanged();
 
-                    ((TabsActivity) getActivity()).notifyJournalChanged();
+                            pDialog.dismiss();
+                            dismissAllowingStateLoss();
 
-                    pDialog.dismiss();
-                    dismissAllowingStateLoss();
+                        }
 
-                }
-            }
-        });
+                    }
+                });
 
     }
 }

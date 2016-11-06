@@ -8,6 +8,7 @@
     <string name="developer_website">https://github.com/Garrison88</string>
     <string name="office_phone_number_uri">tel:18007436348</string>
     <string name="google_maps_url">https://goo.gl/maps/</string>
+    <string name="version_name">2.0</string>
     <!--error messages-->
     <string name="toast_no_dump_selected">Select a dump</string>
     <string name="auth_failed">Authentication Failed</string>

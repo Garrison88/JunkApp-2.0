@@ -14,19 +14,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.firebase.ui.auth.AuthUI;
 import com.garrisonthomas.junkapp.dialogfragments.ArchiveJournalDialogFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     public String todaysDate;
     private static final int RC_SIGN_IN = 9001;
@@ -40,13 +41,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         Date date = new Date();
         SimpleDateFormat df2 = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.CANADA);
         todaysDate = df2.format(date);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
 
     }
 
@@ -66,18 +66,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//
-//
-//        this.menu = menu;
-//
+        this.menu = menu;
 
-//
-//        return true;
-//    }
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -142,6 +137,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void LoginLogout() {
 
+//        final MenuItem loginLogout = menu.findItem(R.id.action_login_logout);
+
         if (auth.getCurrentUser() != null) {
             AuthUI.getInstance()
                     .signOut(this)
@@ -179,8 +176,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         String currentJournalString = preferences.getString((getString(R.string.sp_current_journal_ref)), null);
 
-        final Firebase currentJournalRef = currentJournalString != null
-                ? new Firebase(currentJournalString)
+        final DatabaseReference currentJournalRef = currentJournalString != null
+                ? FirebaseDatabase
+                .getInstance()
+                .getReference(currentJournalString)
                 : null;
 
         return new AlertDialog.Builder(this)
@@ -191,9 +190,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
 
-//                        currentJournalRef.removeEventListener(jobsListener);
-//                        currentJournalRef.removeEventListener(dumpsListener);
-//                        dialog.dismiss();
                         deleteJournal(currentJournalRef);
 
                     }
@@ -210,13 +206,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void deleteJournal(Firebase currentJournalRef) {
+    private void deleteJournal(DatabaseReference currentJournalRef) {
 
         showProgress("Deleting journal...");
 
-        currentJournalRef.removeValue(new Firebase.CompletionListener() {
+        currentJournalRef.removeValue(new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(getString(R.string.sp_current_journal_ref), null);
@@ -232,7 +228,4 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 }

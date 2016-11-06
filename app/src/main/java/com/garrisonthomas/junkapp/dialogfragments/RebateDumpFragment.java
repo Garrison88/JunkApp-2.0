@@ -19,10 +19,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.RebateObject;
 import com.garrisonthomas.junkapp.inputFilters.InputFilterMinMax;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,9 +170,6 @@ public class RebateDumpFragment extends Fragment {
                         && (!TextUtils.isEmpty(etRebateAmount.getText())))
                         && (!TextUtils.isEmpty(etRebateReceiptNumber.getText()))) {
 
-                    Firebase fbrRebate = new Firebase(firebaseJournalRef + "rebate/" + rebateLocationString + " (" +
-                            String.valueOf(etRebateReceiptNumber.getText()) + ")");
-
                     RebateObject rebate = new RebateObject();
 
                     rebate.setRebateLocation(rebateLocationString);
@@ -185,7 +182,11 @@ public class RebateDumpFragment extends Fragment {
                             ? Integer.valueOf(String.valueOf(etPercentPrevious.getText()))
                             : 0);
 
-                    fbrRebate.setValue(rebate);
+                    FirebaseDatabase
+                            .getInstance()
+                            .getReference(firebaseJournalRef + "rebate/" + rebateLocationString + " (" +
+                                    String.valueOf(etRebateReceiptNumber.getText()) + ")")
+                            .setValue(rebate);
 
                     Toast.makeText(getActivity(), "Rebate from " + rebateLocationString + " saved", Toast.LENGTH_SHORT).show();
 
