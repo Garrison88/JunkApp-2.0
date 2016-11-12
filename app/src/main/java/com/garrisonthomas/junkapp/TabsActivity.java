@@ -9,25 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.garrisonthomas.junkapp.entryobjects.TransferStationObject;
 import com.garrisonthomas.junkapp.tabfragments.CalcFragment;
 import com.garrisonthomas.junkapp.tabfragments.DumpFragment;
 import com.garrisonthomas.junkapp.tabfragments.JournalFragment;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 
 public class TabsActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private SharedPreferences preferences;
     private ViewPager viewPager;
-    public static boolean journalExists;
-
-    private static ArrayList<TransferStationObject> transferStationArrayList = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -36,38 +26,6 @@ public class TabsActivity extends BaseActivity {
         setContentView(R.layout.tabs_activity_layout);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        FirebaseDatabase
-                .getInstance()
-                .getReference("dumpInfo")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                        transferStationArrayList.add(dataSnapshot.getValue(TransferStationObject.class));
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
@@ -103,10 +61,6 @@ public class TabsActivity extends BaseActivity {
 
     }
 
-    public static ArrayList<TransferStationObject> getTransferStationArrayList() {
-        return transferStationArrayList;
-    }
-
     public void notifyJournalChanged() {
 
         viewPager.getAdapter().notifyDataSetChanged();
@@ -125,8 +79,6 @@ public class TabsActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-//        viewPager.setAdapter(null);
 
         adapter.addFragment(new JournalFragment(), "Journal");
         adapter.addFragment(new CalcFragment(), "Calculator");

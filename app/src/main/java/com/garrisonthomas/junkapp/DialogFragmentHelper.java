@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,31 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Garrison on 2016-06-11.
  */
 public class DialogFragmentHelper extends DialogFragment {
 
-    public FirebaseAuth auth = FirebaseAuth.getInstance();
-    public Date date = new Date();
-    public SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.CANADA);
-    public SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.CANADA);
-    public SimpleDateFormat day = new SimpleDateFormat("dd", Locale.CANADA);
-    public SimpleDateFormat fullDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.CANADA);
-    public String currentYear = year.format(date);
-    public String currentMonth = month.format(date);
-    public String currentDay = day.format(date);
-    public String todaysDate = fullDate.format(date);
-    public NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+    public static NumberFormat currencyFormat;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -48,21 +33,21 @@ public class DialogFragmentHelper extends DialogFragment {
 
         if (getDialog() != null) {
 
-            Window window = getDialog().getWindow();
-
             // This helps to always show cancel and save button when keyboard is open
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
             // This normalizes the width of the dialogFragments to 90% of screen width
             DisplayMetrics metrics = getResources().getDisplayMetrics();
             int screenWidth = (int) (metrics.widthPixels * 0.90);
 
-            window.setLayout(screenWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setLayout(screenWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            currencyFormat = NumberFormat.getCurrencyInstance();
 
         }
     }
 
-    public static AlertDialog deleteItem(final DialogFragment df, final String databaseRef) {
+    public static AlertDialog showDeleteItemAlertDialog(final DialogFragment df, final String databaseRef) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(df.getActivity());
         builder.setTitle("Delete this entry?")
@@ -91,7 +76,7 @@ public class DialogFragmentHelper extends DialogFragment {
 
                     }
                 });
-        return builder.create();
+        return builder.show();
 
     }
 
@@ -114,6 +99,7 @@ public class DialogFragmentHelper extends DialogFragment {
         mTimePicker = new TimePickerDialog(context, android.app.AlertDialog.BUTTON_POSITIVE, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
                 if (selectedMinute == 00) {
                     button.setText(selectedHour + ":" + selectedMinute + "0");
                 } else if (selectedMinute < 10) {
@@ -121,6 +107,13 @@ public class DialogFragmentHelper extends DialogFragment {
                 } else {
                     button.setText(selectedHour + ":" + selectedMinute);
                 }
+
+//                SimpleDateFormat fmt = new SimpleDateFormat("kk:mm");
+//                Date date = new Date();
+//                String dateString = fmt.format(date);
+//
+//                button.setText(dateString);
+
             }
         }, hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle(title);

@@ -1,8 +1,6 @@
 package com.garrisonthomas.junkapp.dialogfragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
@@ -19,6 +17,8 @@ import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.FuelObject;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
+
 public class AddFuelDialogFragment extends DialogFragmentHelper {
 
     private TextInputEditText etFuelVendor, etFuelCost, etReceiptNumber;
@@ -33,7 +33,6 @@ public class AddFuelDialogFragment extends DialogFragmentHelper {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
         fuelVendorWrapper = (TextInputLayout) v.findViewById(R.id.et_fuel_vendor_wrapper);

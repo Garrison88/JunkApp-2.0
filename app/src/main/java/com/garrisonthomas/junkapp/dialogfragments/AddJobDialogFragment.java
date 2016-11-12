@@ -1,9 +1,7 @@
 package com.garrisonthomas.junkapp.dialogfragments;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -34,11 +32,12 @@ import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.Utils;
 import com.garrisonthomas.junkapp.entryobjects.JobObject;
-import com.garrisonthomas.junkapp.inputFilters.ExpDateFormatWatcher;
-import com.garrisonthomas.junkapp.inputFilters.FourDigitCardFormatWatcher;
+import com.garrisonthomas.junkapp.inputFilters.CustomTextWatcher;
 import com.google.firebase.database.FirebaseDatabase;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
+
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
 
 public class AddJobDialogFragment extends DialogFragmentHelper {
 
@@ -62,11 +61,12 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        currentJournalRef = preferences.getString("currentJournalRef", null);
+        currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
         enterSIDWrapper = (TextInputLayout) v.findViewById(R.id.enter_sid_wrapper);
         etSID = (TextInputEditText) enterSIDWrapper.getEditText();
+        etSID.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        etSID.addTextChangedListener(new CustomTextWatcher(5, 2, '-'));
 
         enterGrossSaleWrapper = (TextInputLayout) v.findViewById(R.id.enter_gross_sale_wrapper);
         etGrossSale = (TextInputEditText) enterGrossSaleWrapper.getEditText();
@@ -78,6 +78,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
         etReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
 
         enterJobNotesWrapper = (TextInputLayout) v.findViewById(R.id.enter_job_notes_wrapper);
+        enterJobNotesWrapper.setHint("Notes");
         etJobNotes = (TextInputEditText) enterJobNotesWrapper.getEditText();
 
         resButton = (RadioButton) v.findViewById(R.id.switch_residential);
@@ -92,8 +93,9 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
         endTime = (Button) v.findViewById(R.id.job_end_time);
 
         View cancelSaveLayout = v.findViewById(R.id.job_cancel_save_button_bar);
-        Button saveJob = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
-        Button cancelJob = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+
+        Button saveJob = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelJob = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         // handle setting of jobType to "Cancellation" by auto-filling receiptNumber, gross, and net sale
         // and setting payType to "Cancellation"
@@ -107,6 +109,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                 etGrossSale.setEnabled(checkedId != R.id.switch_cancellation);
                 etNetSale.setEnabled(checkedId != R.id.switch_cancellation);
                 payTypeSpinner.setEnabled(checkedId != R.id.switch_cancellation);
+                enterJobNotesWrapper.setHint(checkedId == R.id.switch_cancellation ? "Reason" : "Notes");
 
             }
         });
@@ -128,17 +131,13 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
 
         });
 
         etGrossSale.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -158,9 +157,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
 
         startTime.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +178,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
             @Override
             public void onClick(View v) {
 
-                if (validateEditTextLength(etSID, 4, 6)
+                if (validateEditTextLength(etSID, 5, 8)
                         && (!TextUtils.isEmpty(etGrossSale.getText()) || !etGrossSale.isEnabled())
                         && (!TextUtils.isEmpty(etNetSale.getText()) || !etNetSale.isEnabled())
                         && (validateEditTextLength(etReceiptNumber, 5, 5) || !etReceiptNumber.isEnabled())
@@ -190,8 +187,9 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                     JobObject job = new JobObject();
 
                     String timeString = String.valueOf(startTime.getText()) + "-" + String.valueOf(endTime.getText());
-                    int SID = Integer.valueOf(String.valueOf(etSID.getText()));
-                    job.setSID(SID);
+                    String stringSID = String.valueOf(etSID.getText());
+                    int intSID = Integer.valueOf(stringSID.replaceAll("[-]", ""));
+                    job.setSID(intSID);
                     job.setTime(timeString);
                     job.setJobNotes(String.valueOf(etJobNotes.getText()));
 
@@ -219,18 +217,18 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                     FirebaseDatabase
                             .getInstance()
                             .getReference(currentJournalRef + "jobs/"
-                                    + String.valueOf(SID))
+                                    + String.valueOf(intSID))
                             .setValue(job);
 
-                    Toast.makeText(getActivity(), "Job number " + String.valueOf(SID) + " saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Job number " + stringSID + " saved", Toast.LENGTH_SHORT).show();
 
                     dismiss();
 
                 } else {
 
-                    if (!validateEditTextLength(etSID, 4, 6)) {
+                    if (!validateEditTextLength(etSID, 5, 8)) {
                         enterSIDWrapper.setErrorEnabled(true);
-                        enterSIDWrapper.setError("Must be 4-6 numbers");
+                        enterSIDWrapper.setError("Must be 5-7 numbers");
                     } else {
                         enterSIDWrapper.setErrorEnabled(false);
                     }
@@ -283,7 +281,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
         creditCard.setGravity(Gravity.CENTER_HORIZONTAL);
         creditCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(19)});
         creditCard.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
-        creditCard.addTextChangedListener(new FourDigitCardFormatWatcher());
+        creditCard.addTextChangedListener(new CustomTextWatcher(4, 4, '-'));
         layout.addView(creditCard);
 
         final EditText expDate = new EditText(getActivity());
@@ -292,7 +290,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
         expDate.setInputType(InputType.TYPE_CLASS_PHONE);
         expDate.setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
         expDate.setKeyListener(DigitsKeyListener.getInstance("0123456789/"));
-        expDate.addTextChangedListener(new ExpDateFormatWatcher());
+        expDate.addTextChangedListener(new CustomTextWatcher(2, 2, '/'));
         layout.addView(expDate);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());

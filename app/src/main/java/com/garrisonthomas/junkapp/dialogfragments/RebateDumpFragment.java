@@ -1,9 +1,7 @@
 package com.garrisonthomas.junkapp.dialogfragments;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -26,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
 
 /**
  * Created by Garrison on 2016-07-04.
@@ -58,7 +58,6 @@ public class RebateDumpFragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.add_rebate_dump_layout, container, false);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         firebaseJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
         enterTonnageWrapper = (TextInputLayout) v.findViewById(R.id.enter_rebate_tonnage_wrapper);
@@ -69,18 +68,18 @@ public class RebateDumpFragment extends Fragment {
         etRebateReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
         enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.rebate_percent_previous_wrapper);
         etPercentPrevious = (TextInputEditText) enterPercentPreviousWrapper.getEditText();
-        etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+        etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
 
         View cancelSaveLayout = v.findViewById(R.id.rebate_cancel_save_button_bar);
-        Button saveRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
-        Button cancelRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         materialTypeArray = getResources().getStringArray(R.array.material);
         rebateLocationArray = getResources().getStringArray(R.array.rebate_location);
 
-        Spinner materialTypeSpinner = (Spinner) v.findViewById(R.id.spinner_material_type);
-        Spinner rebateLocationSpinner = (Spinner) v.findViewById(R.id.spinner_rebate_location);
-        Spinner weightUnitSpinner = (Spinner) v.findViewById(R.id.spinner_weight_unit);
+        Spinner materialTypeSpinner = (Spinner) v.findViewById(R.id.spinner_material_type),
+                rebateLocationSpinner = (Spinner) v.findViewById(R.id.spinner_rebate_location),
+                weightUnitSpinner = (Spinner) v.findViewById(R.id.spinner_weight_unit);
 
         materialTypeSpinner.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, materialTypeArray));
@@ -117,7 +116,7 @@ public class RebateDumpFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
-                rebateLocationString = rebateLocationArray[position];
+                rebateLocationString = "R+ " + rebateLocationArray[position];
 
             }
 

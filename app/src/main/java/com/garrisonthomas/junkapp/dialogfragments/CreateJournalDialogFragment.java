@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,6 +27,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import static com.garrisonthomas.junkapp.BaseActivity.firebaseConnected;
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
+
 public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
     private Spinner truckSpinner;
@@ -35,11 +41,14 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
     private Button dStartTime, nStartTime;
     private EditText etDriver, etNavigator;
     private String truckSelected, currentJournalString;
-    private SharedPreferences preferences;
-    private ProgressDialog pDialog;
-    private DatabaseReference currentJournalRef;
     private boolean journalExists;
-    TextView errorText;
+    private TextView errorText;
+
+    private Date date = new Date();
+    private String currentYear = new SimpleDateFormat("yyyy", Locale.CANADA).format(date);
+    private String currentMonth = new SimpleDateFormat("MMM", Locale.CANADA).format(date);
+    private String currentDay = new SimpleDateFormat("dd", Locale.CANADA).format(date);
+    private String todaysDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.CANADA).format(date);
 
     public static CreateJournalDialogFragment newInstance(int num) {
         CreateJournalDialogFragment f = new CreateJournalDialogFragment();
@@ -66,13 +75,8 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
         final View v = inflater.inflate(R.layout.add_daily_journal_layout, container, false);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         truckSpinner = (Spinner) v.findViewById(R.id.truck_spinner);
         truckArray = v.getResources().getStringArray(R.array.truck_number);
-
-//        errorText = (TextView) truckSpinner.getSelectedView();
-//        errorText.setError("");
 
         dStartTime = (Button) v.findViewById(R.id.driver_start_time);
         dStartTime.setTransformationMethod(null);
@@ -80,32 +84,15 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
         nStartTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.journal_cancel_save_button_bar);
-        Button createJournal = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
+
+        Button createJournal = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
+                cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
         createJournal.setText("CREATE");
-        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         journalExists = true;
 
         etDriver = (EditText) v.findViewById(R.id.et_driver);
         etNavigator = (EditText) v.findViewById(R.id.et_navigator);
-
-//        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-//        connectedRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                boolean connected = snapshot.getValue(Boolean.class);
-//                if (connected) {
-//                    System.out.println("connected");
-//                } else {
-//                    System.out.println("not connected");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                System.err.println("Listener was cancelled");
-//            }
-//        });
 
         truckSpinner.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, truckArray));
@@ -113,6 +100,9 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+
+                final ProgressDialog pDialog = ProgressDialog.show(getActivity(), null,
+                        "Checking availability...", true);
 
                 truckSelected = truckArray[position];
 
@@ -132,11 +122,15 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
                                     errorText.setError("");
                                     journalExists = true;
 
+                                    pDialog.dismiss();
+
                                 } else if (!snapshot.exists()) {
 
                                     errorText = (TextView) truckSpinner.getSelectedView();
                                     errorText.setError(null);
                                     journalExists = false;
+
+                                    pDialog.dismiss();
 
                                 }
                             }
@@ -185,6 +179,7 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
             public void onClick(View v) {
 
                 if (!journalExists
+                        && firebaseConnected
                         && !TextUtils.isEmpty(etDriver.getText())
                         && !dStartTime.getText().toString().equals("Start")) {
 
@@ -193,6 +188,8 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
                 } else if (journalExists) {
                     Toast.makeText(getActivity(), "A journal for this truck already exists", Toast.LENGTH_SHORT).show();
+                } else if (!firebaseConnected) {
+                    Toast.makeText(getActivity(), "Not connected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Please enter a driver", Toast.LENGTH_SHORT).show();
                 }
@@ -207,13 +204,13 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
     private void createJournal() {
 
-        pDialog = ProgressDialog.show(getActivity(), null,
+        final ProgressDialog pDialog = ProgressDialog.show(getActivity(), null,
                 "Creating journal...", true);
 
         final String driverString = etDriver.getText().toString();
         final String navigatorString = etNavigator.getText().toString();
-        final String driverST = dStartTime.getText().toString();
-        final String navST = nStartTime.getText().toString();
+        final String driverStartTime = dStartTime.getText().toString();
+        final String navStartTime = nStartTime.getText().toString();
 
 //                    fbrJournal.child("journalAuthor").setValue(auth.getCurrentUser().getEmail());
 
@@ -221,13 +218,10 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
         journal.setDate(todaysDate);
         journal.setDriver(driverString);
-        journal.setDriverStartTime(driverST);
+        journal.setDriverTime(driverStartTime);
         journal.setNavigator(navigatorString);
-        journal.setNavStartTime(navST);
+        journal.setNavTime(navStartTime);
         journal.setTruckNumber(truckSelected);
-
-//        DatabaseReference firebaseRef = ;
-
         FirebaseDatabase
                 .getInstance()
                 .getReference(currentJournalString + "info")
@@ -244,7 +238,9 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString(getString(R.string.sp_current_journal_ref), currentJournalString);
                             editor.putString("driver", driverString);
+                            editor.putString("driverStartTime", driverStartTime);
                             editor.putString("navigator", navigatorString);
+                            editor.putString("navStartTime", navStartTime);
                             editor.apply();
 
                             ((TabsActivity) getActivity()).notifyJournalChanged();

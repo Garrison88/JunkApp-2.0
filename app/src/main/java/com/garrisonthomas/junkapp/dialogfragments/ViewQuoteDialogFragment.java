@@ -2,6 +2,7 @@ package com.garrisonthomas.junkapp.dialogfragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
     ImageButton deleteQuoteBtn;
     //    @Bind(R.id.image_view_quote_photo)
 //    ImageView ivQuotePhoto;
-    private int vqSID;
+    private int vqSIDInt;
     private String firebaseJournalRef;
 
     @Override
@@ -76,8 +77,8 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
         deleteQuoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteItem(ViewQuoteDialogFragment.this,
-                        firebaseJournalRef + "quotes/" + String.valueOf(vqSID)).show();
+                showDeleteItemAlertDialog(ViewQuoteDialogFragment.this,
+                        firebaseJournalRef + "quotes/" + vqSIDInt);
             }
         });
 
@@ -89,14 +90,16 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
         super.onCreate(savedInstanceState);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         Bundle vqBundle = getArguments();
-        vqSID = vqBundle.getInt("quoteSpinnerSID");
+        String vqSIDString = vqBundle.getString("quoteSpinnerSID");
+        vqSIDInt = Integer.parseInt(vqSIDString.replaceAll("[-]", ""));
         firebaseJournalRef = vqBundle.getString(getString(R.string.sp_current_journal_ref));
-        dialog.setTitle("Quote SID: " + String.valueOf(vqSID));
+        dialog.setTitle("Quote SID: " + vqSIDString);
         dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
@@ -108,7 +111,7 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
                 .getInstance()
                 .getReference(firebaseJournalRef + "quotes")
                 .orderByChild("quoteSID")
-                .equalTo(vqSID)
+                .equalTo(vqSIDInt)
                 .addChildEventListener(new ChildEventListener() {
 
                     @Override
@@ -131,7 +134,7 @@ public class ViewQuoteDialogFragment extends DialogFragmentHelper implements Vie
                             vqHighEndDisplay.setVisibility(View.VISIBLE);
                             vqHighEnd.setText(highEndString);
                         }
-                        String startEndTime = quoteObject.getQuoteTime();
+                        String startEndTime = quoteObject.getTime();
                         vqLowEnd.setText(lowEndString);
                         vqTime.setText(startEndTime);
 

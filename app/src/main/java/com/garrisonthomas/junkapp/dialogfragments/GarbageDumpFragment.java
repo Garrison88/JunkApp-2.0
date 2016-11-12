@@ -1,9 +1,7 @@
 package com.garrisonthomas.junkapp.dialogfragments;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -24,18 +22,22 @@ import android.widget.Toast;
 
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
-import com.garrisonthomas.junkapp.TabsActivity;
 import com.garrisonthomas.junkapp.entryobjects.DumpObject;
 import com.garrisonthomas.junkapp.entryobjects.TransferStationObject;
 import com.garrisonthomas.junkapp.inputFilters.InputFilterMinMax;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
+
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
 
 public class GarbageDumpFragment extends DialogFragmentHelper {
 
     private TextInputEditText etAddDumpWeight, etDumpReceiptNumber, etPercentPrevious, etEditCost;
+    private TextInputLayout enterWeightWrapper, enterReceiptNumberWrapper, enterPercentPreviousWrapper;
     private TextView tvGrossCost;
     private ImageButton btnEditCost;
     private Spinner dumpNameSpinner;
@@ -44,10 +46,9 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
     private String dumpNameString, currentJournalRef;
     private boolean costIsEditable;
     private LinearLayout dumpCostLayout;
-    private NumberFormat currencyFormat;
 
     private ArrayList<TransferStationObject> transferStationObjectArrayList;
-    private ArrayList<String> dumpNameArray = new ArrayList<>();
+    private ArrayList<String> dumpNameArray;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,26 +56,24 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
 
         final View v = inflater.inflate(R.layout.add_garbage_dump_layout, container, false);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        TextInputLayout enterWeightWrapper = (TextInputLayout) v.findViewById(R.id.enter_weight_wrapper);
+        enterWeightWrapper = (TextInputLayout) v.findViewById(R.id.enter_weight_wrapper);
         etAddDumpWeight = (TextInputEditText) enterWeightWrapper.getEditText();
-        TextInputLayout enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.enter_receipt_number_wrapper);
+        enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.enter_receipt_number_wrapper);
         etDumpReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
-        TextInputLayout enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.enter_percent_previous_wrapper);
+        enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.enter_percent_previous_wrapper);
         etPercentPrevious = (TextInputEditText) enterPercentPreviousWrapper.getEditText();
-        etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+        etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
         TextInputLayout editWeightWrapper = (TextInputLayout) v.findViewById(R.id.edit_dump_cost_wrapper);
         etEditCost = (TextInputEditText) editWeightWrapper.getEditText();
-
-        currencyFormat = NumberFormat.getCurrencyInstance();
 
         tvGrossCost = (TextView) v.findViewById(R.id.tv_dump_gross_cost);
 
         View cancelSaveLayout = v.findViewById(R.id.garbage_cancel_save_button_bar);
-        Button saveDump = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
-        Button cancelDump = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+
+        Button saveDump = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelDump = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         btnEditCost = (ImageButton) v.findViewById(R.id.btn_edit_dump_cost);
 
@@ -82,22 +81,54 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
 
         dumpCostLayout = (LinearLayout) v.findViewById(R.id.dump_cost_layout);
 
-        transferStationObjectArrayList = TabsActivity.getTransferStationArrayList();
+        transferStationObjectArrayList = new ArrayList<>();
+        dumpNameArray = new ArrayList<>();
 
-        for (TransferStationObject x : transferStationObjectArrayList) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference("dumpInfo")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-            dumpNameArray.add(x.getName());
+                        transferStationObjectArrayList.add(dataSnapshot.getValue(TransferStationObject.class));
 
-        }
+                        dumpNameArray.add(dataSnapshot.getValue(TransferStationObject.class).getName());
 
-        dumpNameSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, dumpNameArray));
+                        dumpNameSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_spinner_item, dumpNameArray));
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         dumpNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
+                etAddDumpWeight.setText("");
+                etEditCost.setText("");
+                costIsEditable = false;
                 dumpNameString = transferStationObjectArrayList.get(position).getName();
                 pricePerTonne = transferStationObjectArrayList.get(position).getRate();
 
@@ -133,6 +164,8 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                     dumpCostLayout.setVisibility(View.VISIBLE);
                     tvGrossCost.setText(currencyFormat.format(result));
 
+                    etEditCost.setHint(currencyFormat.format(result));
+
                 } else {
                     dumpCostLayout.setVisibility(View.GONE);
                 }
@@ -145,20 +178,22 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
             }
         });
 
-
         saveDump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!TextUtils.isEmpty(etAddDumpWeight.getText())
-                        && !etAddDumpWeight.getText().toString().equals(".")
-                        && (!TextUtils.isEmpty(etDumpReceiptNumber.getText()))) {
+                String tonnageString = etAddDumpWeight.getText().toString(),
+                        receiptNumberString = etDumpReceiptNumber.getText().toString();
+
+                if (!tonnageString.equals("")
+                        && !tonnageString.equals(".")
+                        && !receiptNumberString.equals("")) {
 
                     DumpObject dump = new DumpObject();
 
                     dump.setDumpName(dumpNameString);
-                    dump.setTonnage(Double.valueOf(etAddDumpWeight.getText().toString()));
-                    dump.setDumpReceiptNumber(Integer.valueOf(etDumpReceiptNumber.getText().toString()));
+                    dump.setTonnage(Double.valueOf(tonnageString));
+                    dump.setDumpReceiptNumber(Integer.valueOf(receiptNumberString));
 
                     dump.setGrossCost(!TextUtils.isEmpty(etEditCost.getText())
                             ? Double.valueOf(etEditCost.getText().toString())
@@ -171,7 +206,7 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                     FirebaseDatabase
                             .getInstance()
                             .getReference(currentJournalRef + "dumps/" + dumpNameString + " (" +
-                                    String.valueOf(etDumpReceiptNumber.getText()) + ")")
+                                    receiptNumberString + ")")
                             .setValue(dump);
 
                     Toast.makeText(getActivity(), "Dump at " + dumpNameString + " saved", Toast.LENGTH_SHORT).show();
@@ -180,7 +215,19 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
 
                 } else {
 
-                    Toast.makeText(getActivity(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
+                    if (tonnageString.equals("")
+                            || tonnageString.equals(".")) {
+                        enterWeightWrapper.setErrorEnabled(true);
+                        enterWeightWrapper.setError(getString(R.string.empty_et_error_message));
+                    } else {
+                        enterWeightWrapper.setErrorEnabled(false);
+                    }
+                    if (receiptNumberString.equals("")) {
+                        enterReceiptNumberWrapper.setErrorEnabled(true);
+                        enterReceiptNumberWrapper.setError(getString(R.string.empty_et_error_message));
+                    } else {
+                        enterReceiptNumberWrapper.setErrorEnabled(false);
+                    }
 
                 }
             }

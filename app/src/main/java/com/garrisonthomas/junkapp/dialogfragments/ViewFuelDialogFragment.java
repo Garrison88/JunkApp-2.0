@@ -35,8 +35,8 @@ public class ViewFuelDialogFragment extends DialogFragmentHelper implements View
     Button okBtn;
     @Bind(R.id.btn_delete_fuel)
     ImageButton deleteFuelBtn;
-    public String firebaseJournalRef, fuelReceiptNumber;
 
+    private String firebaseJournalRef, fuelReceiptNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,8 +58,8 @@ public class ViewFuelDialogFragment extends DialogFragmentHelper implements View
         deleteFuelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteItem(ViewFuelDialogFragment.this,
-                        firebaseJournalRef + "/fuel/" + String.valueOf(fuelReceiptNumber)).show();
+                showDeleteItemAlertDialog(ViewFuelDialogFragment.this,
+                        firebaseJournalRef + "/fuel/" + String.valueOf(fuelReceiptNumber));
             }
         });
 

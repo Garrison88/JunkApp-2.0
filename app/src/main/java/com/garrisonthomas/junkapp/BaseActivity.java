@@ -19,21 +19,19 @@ import com.garrisonthomas.junkapp.dialogfragments.ArchiveJournalDialogFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.google.firebase.database.ValueEventListener;
 
 public class BaseActivity extends AppCompatActivity {
 
-    public String todaysDate;
+    public static FirebaseAuth auth = FirebaseAuth.getInstance();
     private static final int RC_SIGN_IN = 9001;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
     private ProgressDialog progressDialog;
-    private SharedPreferences preferences;
+    public static SharedPreferences preferences;
+    public static boolean firebaseConnected;
 
     public Menu menu;
 
@@ -41,12 +39,24 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        Date date = new Date();
-        SimpleDateFormat df2 = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.CANADA);
-        todaysDate = df2.format(date);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference(".info/connected")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+
+                        firebaseConnected = snapshot.getValue(Boolean.class);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+
+                    }
+                });
 
     }
 
@@ -59,10 +69,6 @@ public class BaseActivity extends AppCompatActivity {
                 Toast.makeText(BaseActivity.this, "Welcome!", Toast.LENGTH_LONG).show();
                 finish();
             }
-//            else {
-//                // user is not signed in. Maybe just wait for the user to press
-//                // "sign in" again, or show a message
-//            }
         }
     }
 
@@ -215,9 +221,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(getString(R.string.sp_current_journal_ref), null);
-                editor.putString("driver", null);
-                editor.putString("navigator", null);
+                editor.clear();
                 editor.apply();
 
                 dismissProgress();

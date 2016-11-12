@@ -46,8 +46,8 @@ public class ViewJobDialogFragment extends DialogFragmentHelper implements ViewI
     Button okBtn;
     @Bind(R.id.btn_delete_job)
     ImageButton deleteJobBtn;
-    private static int vjSID;
-    public static String firebaseJournalRef;
+    private String firebaseJournalRef;
+    private int vjSIDInt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +75,8 @@ public class ViewJobDialogFragment extends DialogFragmentHelper implements ViewI
         deleteJobBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteItem(ViewJobDialogFragment.this,
-                        firebaseJournalRef + "/jobs/" + String.valueOf(vjSID)).show();
+                showDeleteItemAlertDialog(ViewJobDialogFragment.this,
+                        firebaseJournalRef + "/jobs/" + vjSIDInt);
             }
         });
 
@@ -89,9 +89,10 @@ public class ViewJobDialogFragment extends DialogFragmentHelper implements ViewI
 
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         Bundle vjBundle = getArguments();
-        vjSID = vjBundle.getInt("jobSpinnerSID");
+        String vjSIDString = vjBundle.getString("jobSpinnerSID");
+        vjSIDInt = Integer.parseInt(vjSIDString.replaceAll("[-]", ""));
         firebaseJournalRef = vjBundle.getString(getString(R.string.sp_current_journal_ref));
-        dialog.setTitle("Job SID: " + String.valueOf(vjSID));
+        dialog.setTitle("Job SID: " + vjSIDString);
         dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
@@ -103,7 +104,7 @@ public class ViewJobDialogFragment extends DialogFragmentHelper implements ViewI
                 .getInstance()
                 .getReference(firebaseJournalRef + "jobs")
                 .orderByChild("sid")
-                .equalTo(vjSID)
+                .equalTo(vjSIDInt)
                 .addChildEventListener(new ChildEventListener() {
 
                     @Override

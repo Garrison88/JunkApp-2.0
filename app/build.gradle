@@ -8,7 +8,7 @@ android {
         applicationId "com.garrisonthomas.junkapp"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 9
+        versionCode 13
         versionName "2.0"
 
         // Enabling multidex support

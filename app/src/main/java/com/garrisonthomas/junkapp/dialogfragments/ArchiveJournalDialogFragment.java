@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
+
 public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
 
-    private SharedPreferences preferences;
     private EditText endOfDayNotes;
     private Button dEndTime, nEndTime;
-    private String currentJournalRef, driver, navigator, loadString, fuelString;
+    private String currentJournalRef, driver, driverStartTime, navigator, navStartTime, loadString, fuelString;
     private String[] endLoadArray, endFuelArray;
-    private ProgressDialog pDialog;
 
     @NonNull
     @Override
@@ -53,11 +52,11 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
 
         final View v = inflater.inflate(R.layout.archive_journal_layout, container, false);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
         driver = preferences.getString("driver", null);
+        driverStartTime = preferences.getString("driverStartTime", null);
         navigator = preferences.getString("navigator", null);
+        navStartTime = preferences.getString("navStartTime", null);
 
         endOfDayNotes = (EditText) v.findViewById(R.id.end_day_notes);
 
@@ -69,18 +68,23 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
         nEndTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.archive_cancel_save_button_bar);
-        Button archive = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
+
+        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel),
+                archive = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
         archive.setText("ARCHIVE");
-        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         endLoadArray = v.getResources().getStringArray(R.array.end_day_load);
         endFuelArray = v.getResources().getStringArray(R.array.end_day_fuel);
 
-        final Spinner endLoad = (Spinner) v.findViewById(R.id.end_day_load);
-        final Spinner endFuel = (Spinner) v.findViewById(R.id.end_day_fuel);
+        final Spinner endLoad = (Spinner) v.findViewById(R.id.end_day_load),
+                endFuel = (Spinner) v.findViewById(R.id.end_day_fuel);
 
         endLoad.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, endLoadArray));
+
+        endFuel.setAdapter(new ArrayAdapter<>(this.getActivity(),
+                android.R.layout.simple_spinner_item, endFuelArray));
+
         endLoad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -96,8 +100,6 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
             }
         });
 
-        endFuel.setAdapter(new ArrayAdapter<>(this.getActivity(),
-                android.R.layout.simple_spinner_item, endFuelArray));
         endFuel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -192,17 +194,17 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
 
     public void archiveJournal() {
 
-        final String DET = dEndTime.getText().toString();
-        final String NET = nEndTime.getText().toString();
+        final String driverEndTime = dEndTime.getText().toString();
+        final String navEndTime = nEndTime.getText().toString();
 
-        pDialog = ProgressDialog.show(getActivity(), null,
+        final ProgressDialog pDialog = ProgressDialog.show(getActivity(), null,
                 "Archiving journal...", true);
 
         DatabaseReference fbrJournal = FirebaseDatabase.getInstance()
                 .getReference(currentJournalRef + "info");
 
-        fbrJournal.child("driverEndTime").setValue(DET);
-        fbrJournal.child("navEndTime").setValue(NET);
+        fbrJournal.child("driverTime").setValue(driverStartTime + "-" + driverEndTime);
+        fbrJournal.child("navTime").setValue(navStartTime + "-" + navEndTime);
         fbrJournal.child("endOfDayNotes").setValue("Load: " + loadString + ". Fuel: " + fuelString +
                 ". Notes: " + endOfDayNotes.getText().toString());
         fbrJournal.child("archived").setValue(true, new DatabaseReference.CompletionListener() {
@@ -210,9 +212,7 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("currentJournalRef", null);
-                editor.putString("driver", null);
-                editor.putString("navigator", null);
+                editor.clear();
                 editor.apply();
                 Toast.makeText(getActivity(), "Journal successfully archived",
                         Toast.LENGTH_SHORT).show();

@@ -19,8 +19,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.garrisonthomas.junkapp.R;
-import com.garrisonthomas.junkapp.TabsActivity;
 import com.garrisonthomas.junkapp.entryobjects.TransferStationObject;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -31,14 +34,14 @@ public class DumpFragment extends Fragment {
 
     private Spinner dumpsSpinner;
     private Button infoBtn, dirBtn, calcBtn, dumpsClearBtn;
-    private ArrayList<TransferStationObject> transferStationObjectArrayList = TabsActivity.getTransferStationArrayList();
-    private ArrayList<String> dumpNameArray = new ArrayList<>();
+    private ArrayList<TransferStationObject> transferStationObjectArrayList;
+    private ArrayList<String> dumpNameArray;
     private double selectedDumpRate;
     private EditText etDumpCost;
     private TextView tvDumpCost;
     private String selectedDumpInfo, selectedDumpName;
-    private NumberFormat currencyFormat;
     private NumberFormat wholeNumberCurrencyFormat;
+    private NumberFormat currencyFormat;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -60,13 +63,44 @@ public class DumpFragment extends Fragment {
         etDumpCost = (EditText) v.findViewById(R.id.et_dump_cost);
         tvDumpCost = (TextView) v.findViewById(R.id.tv_dump_cost);
 
-        for (TransferStationObject x : transferStationObjectArrayList) {
+        transferStationObjectArrayList = new ArrayList<>();
+        dumpNameArray = new ArrayList<>();
 
-            dumpNameArray.add(x.getName());
+        FirebaseDatabase
+                .getInstance()
+                .getReference("dumpInfo")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-        }
+                        transferStationObjectArrayList.add(dataSnapshot.getValue(TransferStationObject.class));
 
-        dumpsSpinner.setAdapter(new DumpsAdapter(getActivity(), R.layout.custom_spinner_layout, dumpNameArray));
+                        dumpNameArray.add(dataSnapshot.getValue(TransferStationObject.class).getName());
+
+                        dumpsSpinner.setAdapter(new DumpsAdapter(getActivity(), R.layout.custom_spinner_layout, dumpNameArray));
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         dumpsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

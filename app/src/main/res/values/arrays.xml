@@ -220,6 +220,7 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+        <item>TEST</item>
     </string-array>
 
     <string-array name="job_pay_type">

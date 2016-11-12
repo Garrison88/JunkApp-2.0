@@ -7,7 +7,7 @@ public class QuoteObject {
 
     private int quoteSID;
     private double lowEnd, highEnd;
-    private String quoteTime, quoteNotes, photoDownloadUrl;
+    private String time, quoteNotes, photoDownloadUrl;
 
     public String getPhotoDownloadUrl() {
         return photoDownloadUrl;
@@ -43,12 +43,12 @@ public class QuoteObject {
         }
     }
 
-    public String getQuoteTime() {
-        return quoteTime;
+    public String getTime() {
+        return time;
     }
 
-    public void setQuoteTime(String quoteTime) {
-        this.quoteTime = quoteTime;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getQuoteNotes() {
@@ -56,8 +56,8 @@ public class QuoteObject {
     }
 
     public void setQuoteNotes(String quoteNotes) {
-        if (quoteNotes != null) {
+//        if (quoteNotes != null) {
             this.quoteNotes = quoteNotes;
-        }
+//        }
     }
 }

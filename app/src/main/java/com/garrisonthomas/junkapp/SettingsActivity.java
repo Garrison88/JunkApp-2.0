@@ -6,7 +6,6 @@ import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity {
 
-    //    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +17,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         versionName.setSummary(BuildConfig.VERSION_NAME);
         versionCode.setSummary(String.valueOf(BuildConfig.VERSION_CODE));
-
 
     }
 }

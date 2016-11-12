@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -36,7 +35,6 @@ import com.garrisonthomas.junkapp.entryobjects.JobObject;
 import com.garrisonthomas.junkapp.entryobjects.RebateObject;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,7 +50,9 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class JournalFragment extends Fragment implements View.OnClickListener {
+import static com.garrisonthomas.junkapp.BaseActivity.auth;
+
+public class JournalFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     @Bind(R.id.tv_todays_crew)
     TextView todaysCrew;
@@ -93,28 +93,19 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.curret_journal_relative_layout)
     RelativeLayout currentJournalRelativeLayout;
 
-    private String dumpSpinnerText;
-    private String fuelReceiptNumber;
-    private String spDriver;
-    private String spNavigator;
-    private String currentJournalRef;
+    private String selectedJobSID, selectedQuoteSID, dumpSpinnerText, fuelReceiptNumber,
+            spDriver, spNavigator, currentJournalRef;
 
     private DatabaseReference infoRef;
 
-    private int selectedJobSID, selectedQuoteSID, dumpReceiptNumber, totalGrossProfit, totalDumpCost;
+    private int dumpReceiptNumber, totalGrossProfit, totalDumpCost;
 
-    private SharedPreferences preferences;
-
-    private ArrayList<Integer> jobsArray = new ArrayList<>();
-    private ArrayList<Integer> quotesArray = new ArrayList<>();
-    private ArrayList<String> dumpsArray = new ArrayList<>();
-    private ArrayList<String> fuelArray = new ArrayList<>();
-
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ArrayList<String> jobsArray = new ArrayList<>(), quotesArray = new ArrayList<>(),
+            dumpsArray = new ArrayList<>(), fuelArray = new ArrayList<>();
 
     private NumberFormat currencyFormat;
 
-//    private ChildEventListener jobsListener, dumpsListener, rebateListener;
+    private SharedPreferences preferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,23 +121,34 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        infoRef = FirebaseDatabase
-                .getInstance()
-                .getReference(currentJournalRef + "info");
-
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        currencyFormat = NumberFormat.getCurrencyInstance();
 
         if (currentJournalRef != null) {
 
+            infoRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference(currentJournalRef + "info");
+
+            viewJob.setOnClickListener(this);
+            viewQuote.setOnClickListener(this);
+            viewDump.setOnClickListener(this);
+            viewFuel.setOnClickListener(this);
+            addJob.setOnClickListener(this);
+            addQuote.setOnClickListener(this);
+            addDump.setOnClickListener(this);
+            addFuel.setOnClickListener(this);
+
+            jobsSpinner.setOnItemSelectedListener(this);
+            quotesSpinner.setOnItemSelectedListener(this);
+            dumpsSpinner.setOnItemSelectedListener(this);
+            fuelSpinner.setOnItemSelectedListener(this);
+
             // populate spinners
-            DatabaseReference jobs = FirebaseDatabase.getInstance().getReference(currentJournalRef + "jobs");
-            Utils.populateIntegerSpinner(getActivity(), jobs, jobsArray, jobsSpinner);
-            DatabaseReference quotes = FirebaseDatabase.getInstance().getReference(currentJournalRef + "quotes");
-            Utils.populateIntegerSpinner(getActivity(), quotes, quotesArray, quotesSpinner);
-            DatabaseReference dumps = FirebaseDatabase.getInstance().getReference(currentJournalRef + "dumps");
-            Utils.populateStringSpinner(getActivity(), dumps, dumpsArray, dumpsSpinner);
-            DatabaseReference fuel = FirebaseDatabase.getInstance().getReference(currentJournalRef + "fuel");
-            Utils.populateStringSpinner(getActivity(), fuel, fuelArray, fuelSpinner);
+            Utils.populateEntrySpinner(getActivity(), currentJournalRef + "jobs", jobsArray, jobsSpinner, true);
+            Utils.populateEntrySpinner(getActivity(), currentJournalRef + "quotes", quotesArray, quotesSpinner, true);
+            Utils.populateEntrySpinner(getActivity(), currentJournalRef + "dumps", dumpsArray, dumpsSpinner, false);
+            Utils.populateEntrySpinner(getActivity(), currentJournalRef + "rebate", dumpsArray, dumpsSpinner, false);
+            Utils.populateEntrySpinner(getActivity(), currentJournalRef + "fuel", fuelArray, fuelSpinner, false);
 
             //query grossSale children of SID nodes to find real-time daily profit
             FirebaseDatabase
@@ -192,10 +194,9 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-            // query dumps and rebate to find percentOnDumps
-            FirebaseDatabase
-                    .getInstance()
-                    .getReference(currentJournalRef + "dumps")
+            // query dumps to find percentOnDumps
+            DatabaseReference dumpsRef = FirebaseDatabase.getInstance().getReference(currentJournalRef + "dumps");
+            dumpsRef
                     .addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -207,6 +208,8 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                                     : Math.round(dumpObject.getGrossCost());
 
                             updateUI();
+
+
                         }
 
                         @Override
@@ -238,7 +241,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-            // query dumps and rebate to find percentOnDumps
+            // query rebate to find percentOnDumps
             FirebaseDatabase
                     .getInstance()
                     .getReference(currentJournalRef + "rebate")
@@ -308,83 +311,6 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-            jobsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    selectedJobSID = (int) jobsSpinner.getItemAtPosition(position);
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-
-            });
-
-            quotesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    selectedQuoteSID = (int) quotesSpinner.getItemAtPosition(position);
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-
-            });
-
-            dumpsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    dumpSpinnerText = (String) dumpsSpinner.getItemAtPosition(position);
-
-                    Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(dumpSpinnerText);
-                    while (m.find()) {
-                        dumpReceiptNumber = Integer.parseInt(m.group(1));
-                    }
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-            fuelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    fuelReceiptNumber = (String) fuelSpinner.getItemAtPosition(position);
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-            currencyFormat = NumberFormat.getCurrencyInstance();
-            currencyFormat.setMinimumFractionDigits(0);
-
-            viewJob.setOnClickListener(this);
-            viewQuote.setOnClickListener(this);
-            viewDump.setOnClickListener(this);
-            viewFuel.setOnClickListener(this);
-            addJob.setOnClickListener(this);
-            addQuote.setOnClickListener(this);
-            addDump.setOnClickListener(this);
-            addFuel.setOnClickListener(this);
-
         } else {
 
             createJournal.setOnClickListener(new View.OnClickListener() {
@@ -420,6 +346,8 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
     public void updateUI() {
 
+        currencyFormat.setMinimumFractionDigits(0);
+
         String jobNumbersString = "Gross Profit: " + currencyFormat.format(totalGrossProfit)
                 + POG(totalGrossProfit);
 
@@ -432,7 +360,6 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
     }
 
     public String POG(int TGP) {
-
 
         infoRef
                 .child("totalGrossProfit")
@@ -456,11 +383,11 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
         infoRef
                 .child("percentOnDumps")
-                .setValue(TGP > 1
+                .setValue(TGP > 1 && TDC > 1
                         ? Math.round((100 * (TDC / (float) TGP)))
                         : 0);
 
-        return (TGP > 1 && TDC > 1)
+        return TGP > 1 && TDC > 1
                 ? " (" + String.valueOf(Math.round((100 * (TDC / (float) TGP)))) + "%)"
                 : "";
 
@@ -490,7 +417,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_view_job:
 
-                if (jobsArray.size() > 0) {
+                if (!jobsArray.isEmpty()) {
 
                     ViewJobDialogFragment vjDialogFragment = new ViewJobDialogFragment();
 
@@ -499,7 +426,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                     }
 
                     Bundle vjBundle = new Bundle();
-                    vjBundle.putInt("jobSpinnerSID", selectedJobSID);
+                    vjBundle.putString("jobSpinnerSID", selectedJobSID);
                     vjBundle.putString(getString(R.string.sp_current_journal_ref), currentJournalRef);
                     vjDialogFragment.setArguments(vjBundle);
                     vjDialogFragment.show(manager, "fragViewJob");
@@ -510,7 +437,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_view_quote:
 
-                if (quotesArray.size() > 0) {
+                if (!quotesArray.isEmpty()) {
 
                     ViewQuoteDialogFragment vqDialogFragment = new ViewQuoteDialogFragment();
 
@@ -519,7 +446,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
                     }
 
                     Bundle vqBundle = new Bundle();
-                    vqBundle.putInt("quoteSpinnerSID", selectedQuoteSID);
+                    vqBundle.putString("quoteSpinnerSID", selectedQuoteSID);
                     vqBundle.putString(getString(R.string.sp_current_journal_ref), currentJournalRef);
                     vqDialogFragment.setArguments(vqBundle);
                     vqDialogFragment.show(manager, "fragViewQuote");
@@ -530,7 +457,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_view_dump:
 
-                if (dumpsArray.size() > 0) {
+                if (!dumpsArray.isEmpty()) {
 
                     ViewDumpDialogFragment vdDialogFragment = new ViewDumpDialogFragment();
 
@@ -551,7 +478,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_view_fuel:
 
-                if (fuelArray.size() > 0) {
+                if (!fuelArray.isEmpty()) {
 
                     ViewFuelDialogFragment vfDialogFragment = new ViewFuelDialogFragment();
 
@@ -616,6 +543,49 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
 
                 break;
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        switch (adapterView.getId()) {
+
+            case R.id.jobs_spinner:
+
+                selectedJobSID = (String) jobsSpinner.getItemAtPosition(i);
+
+                break;
+
+            case R.id.quotes_spinner:
+
+                selectedQuoteSID = String.valueOf(quotesSpinner.getItemAtPosition(i));
+
+                break;
+
+            case R.id.dumps_spinner:
+
+                dumpSpinnerText = (String) dumpsSpinner.getItemAtPosition(i);
+
+                Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(dumpSpinnerText);
+                while (m.find()) {
+                    dumpReceiptNumber = Integer.parseInt(m.group(1));
+                }
+
+                break;
+
+            case R.id.fuel_spinner:
+
+                fuelReceiptNumber = (String) fuelSpinner.getItemAtPosition(i);
+
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
 //    @Override

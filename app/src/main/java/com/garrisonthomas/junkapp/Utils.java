@@ -7,100 +7,72 @@ import android.widget.Spinner;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public abstract class Utils {
 
-    public static void populateIntegerSpinner(final Context context, final DatabaseReference firebase,
-                                              final ArrayList<Integer> arrayList, final Spinner spinner) {
+    public static void populateEntrySpinner(final Context context, final String reference,
+                                            final ArrayList<String> arrayList, final Spinner spinner,
+                                            final boolean isSID) {
 
-        firebase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(reference)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot snapshot, String previousChild) {
 
-                arrayList.add(Integer.valueOf(snapshot.getKey()));
+                        if (!isSID) {
+                            arrayList.add(snapshot.getKey());
+                        } else {
+                            arrayList.add((String.valueOf(snapshot.getKey()).length() <= 5)
+                                    ? snapshot.getKey()
+                                    : String.valueOf(snapshot.getKey()).substring(0, 5)
+                                    + "-" + String.valueOf(snapshot.getKey()).substring(5));
+                        }
 
-                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(context,
-                        android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                spinner.setAdapter(adapter);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_item, arrayList);
+                        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                        spinner.setAdapter(adapter);
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                arrayList.remove(Integer.valueOf(dataSnapshot.getKey()));
+                        if (!isSID) {
+                            arrayList.remove(dataSnapshot.getKey());
+                        } else {
+                            arrayList.remove((String.valueOf(dataSnapshot.getKey()).length() <= 5)
+                                    ? dataSnapshot.getKey()
+                                    : String.valueOf(dataSnapshot.getKey()).substring(0, 5)
+                                    + "-" + String.valueOf(dataSnapshot.getKey()).substring(5));
+                        }
 
-                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(context,
-                        android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                spinner.setAdapter(adapter);
-            }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_item, arrayList);
+                        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                        spinner.setAdapter(adapter);
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
 
-            }
-        });
-
-    }
-
-
-    public static void populateStringSpinner(final Context context, final DatabaseReference firebase,
-                                             final ArrayList<String> arrayList, final Spinner spinner) {
-
-        firebase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-
-                arrayList.add(snapshot.getKey());
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-                        android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                spinner.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                arrayList.remove(dataSnapshot.getKey());
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-                        android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                spinner.setAdapter(adapter);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-
-            }
-        });
+                    }
+                });
 
     }
 

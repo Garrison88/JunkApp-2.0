@@ -9,11 +9,11 @@ import com.google.firebase.database.Exclude;
 
 public class DailyJournalObject {
 
-    private String driver, driverStartTime, driverEndTime, navigator, navStartTime, navEndTime,
+    private String driver, driverTime, navigator, navTime,
             endOfDayNotes, date, truckNumber;
     @Exclude
     private int percentOfGoal, percentOnDumps, totalGrossProfit, totalDumpCost;
-//    @Exclude
+    //    @Exclude
     private boolean isArchived;
 
     public DailyJournalObject() {
@@ -54,20 +54,12 @@ public class DailyJournalObject {
         this.driver = driver;
     }
 
-    public String getDriverStartTime() {
-        return driverStartTime;
+    public String getDriverTime() {
+        return driverTime;
     }
 
-    public void setDriverStartTime(String driverStartTime) {
-        this.driverStartTime = driverStartTime;
-    }
-
-    public String getDriverEndTime() {
-        return driverEndTime;
-    }
-
-    public void setDriverEndTime(String driverEndTime) {
-        this.driverEndTime = driverEndTime;
+    public void setDriverTime(String driverTime) {
+        this.driverTime = driverTime;
     }
 
     public String getNavigator() {
@@ -78,20 +70,12 @@ public class DailyJournalObject {
         this.navigator = navigator;
     }
 
-    public String getNavStartTime() {
-        return navStartTime;
+    public String getNavTime() {
+        return navTime;
     }
 
-    public void setNavStartTime(String navStartTime) {
-        this.navStartTime = navStartTime;
-    }
-
-    public String getNavEndTime() {
-        return navEndTime;
-    }
-
-    public void setNavEndTime(String navEndTime) {
-        this.navEndTime = navEndTime;
+    public void setNavTime(String navTime) {
+        this.navTime = navTime;
     }
 
     public String getEndOfDayNotes() {

@@ -4,14 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -19,6 +17,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import android.widget.Toast;
 import com.garrisonthomas.junkapp.DialogFragmentHelper;
 import com.garrisonthomas.junkapp.R;
 import com.garrisonthomas.junkapp.entryobjects.QuoteObject;
+import com.garrisonthomas.junkapp.inputFilters.CustomTextWatcher;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,6 +39,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+
+import static com.garrisonthomas.junkapp.BaseActivity.preferences;
 
 public class AddQuoteDialogFragment extends DialogFragmentHelper {
 
@@ -63,11 +65,12 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
         enterQuoteSIDWrapper = (TextInputLayout) v.findViewById(R.id.enter_quote_sid_wrapper);
         etQuoteSID = (TextInputEditText) enterQuoteSIDWrapper.getEditText();
+        etQuoteSID.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        etQuoteSID.addTextChangedListener(new CustomTextWatcher(5, 2, '-'));
 
         enterLowEndWrapper = (TextInputLayout) v.findViewById(R.id.enter_low_end_wrapper);
         etLowEnd = (TextInputEditText) enterLowEndWrapper.getEditText();
@@ -82,8 +85,9 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
         endTime = (Button) v.findViewById(R.id.quote_end_time);
 
         View cancelSaveLayout = v.findViewById(R.id.quote_cancel_save_button_bar);
-        Button saveQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
-        Button cancelQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+
+        Button saveQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         choosePhoto = (ImageButton) v.findViewById(R.id.btn_select_quote_photo);
 
@@ -125,8 +129,11 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
             public void onClick(View v) {
 
 
-                if ((validateEditTextLength(etQuoteSID, 4, 6))
+                if ((validateEditTextLength(etQuoteSID, 5, 8))
                         && (!TextUtils.isEmpty(etLowEnd.getText()))) {
+
+                    final String quoteSIDString = etQuoteSID.getText().toString();
+                    final int quoteSIDInt = Integer.valueOf(quoteSIDString.replaceAll("[-]", ""));
 
                     final String quoteTime = (String.valueOf(startTime.getText()))
                             + "-" + (String.valueOf(endTime.getText()));
@@ -139,7 +146,7 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                                 "Uploading photo...", true);
 
                         StorageReference quoteSIDRef = storageRef.child("quoteImages/" +
-                                String.valueOf(etQuoteSID.getText()) + "/" + String.valueOf(quotePhotoUri.getLastPathSegment()));
+                                quoteSIDInt + "/" + String.valueOf(quotePhotoUri.getLastPathSegment()));
                         UploadTask uploadTask = quoteSIDRef.putFile(quotePhotoUri);
 
 //                 Register observers to listen for when the download is done or if it fails
@@ -159,8 +166,8 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 
                                 quote.setPhotoDownloadUrl(downloadUrlString);
-                                quote.setQuoteSID(Integer.valueOf(etQuoteSID.getText().toString()));
-                                quote.setQuoteTime(quoteTime);
+                                quote.setQuoteSID(quoteSIDInt);
+                                quote.setTime(quoteTime);
                                 quote.setLowEnd(Double.valueOf(etLowEnd.getText().toString()));
                                 quote.setHighEnd(!TextUtils.isEmpty(etHighEnd.getText())
                                         ? Double.valueOf(etHighEnd.getText().toString())
@@ -171,10 +178,10 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
 
                                 FirebaseDatabase.getInstance()
                                         .getReference(currentJournalRef + "quotes/"
-                                                + String.valueOf(etQuoteSID.getText()))
+                                                + quoteSIDInt)
                                         .setValue(quote);
 
-                                Toast.makeText(getActivity(), "Quote number " + etQuoteSID.getText().toString() + " saved",
+                                Toast.makeText(getActivity(), "Quote number " + quoteSIDString + " saved",
                                         Toast.LENGTH_SHORT).show();
 
                                 pDialog.dismiss();
@@ -186,8 +193,8 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                         });
                     } else {
 
-                        quote.setQuoteSID(Integer.valueOf(etQuoteSID.getText().toString()));
-                        quote.setQuoteTime(quoteTime);
+                        quote.setQuoteSID(quoteSIDInt);
+                        quote.setTime(quoteTime);
                         quote.setLowEnd(Double.valueOf(etLowEnd.getText().toString()));
                         quote.setHighEnd(!TextUtils.isEmpty(etHighEnd.getText())
                                 ? Double.valueOf(etHighEnd.getText().toString())
@@ -198,18 +205,18 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
 
                         FirebaseDatabase.getInstance()
                                 .getReference(currentJournalRef + "quotes/"
-                                        + String.valueOf(etQuoteSID.getText()))
+                                        + quoteSIDInt)
                                 .setValue(quote);
 
-                        Toast.makeText(getActivity(), "Quote number " + etQuoteSID.getText().toString() + " saved",
+                        Toast.makeText(getActivity(), "Quote number " + quoteSIDString + " saved",
                                 Toast.LENGTH_SHORT).show();
 
                         dismiss();
                     }
                 } else {
-                    if (!validateEditTextLength(etQuoteSID, 4, 6)) {
+                    if (!validateEditTextLength(etQuoteSID, 5, 8)) {
                         enterQuoteSIDWrapper.setErrorEnabled(true);
-                        enterQuoteSIDWrapper.setError("Must be 4-6 numbers");
+                        enterQuoteSIDWrapper.setError("Must be 5-7 numbers");
                     } else {
                         enterQuoteSIDWrapper.setErrorEnabled(false);
                     }

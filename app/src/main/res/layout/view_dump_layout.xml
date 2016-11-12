@@ -19,6 +19,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/cost_amount_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gross Cost" />
@@ -26,12 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Weight (mt)" />
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Receipt #" />-->
+                android:text="Tonnage" />
 
             <TextView
                 android:id="@+id/v_d_percent_previous_text"

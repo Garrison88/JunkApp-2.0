@@ -37,7 +37,7 @@ public class CalcFragment extends Fragment {
 
     private NumberFormat currencyFormat;
 
-    ArrayList<Integer> priceArray = new ArrayList<>();
+    private ArrayList<Integer> priceArray = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -272,7 +272,6 @@ public class CalcFragment extends Fragment {
     }
 
 
-
     public class CustomVolumeSpinnerAdapter extends ArrayAdapter<String> {
 
         public CustomVolumeSpinnerAdapter(Context ctx, int txtViewResourceId, String[] objects) {
@@ -355,7 +354,6 @@ public class CalcFragment extends Fragment {
             return mySpinner;
         }
     }
-
 
 //    @Override
 //    public void onSaveInstanceState(Bundle outState) {
