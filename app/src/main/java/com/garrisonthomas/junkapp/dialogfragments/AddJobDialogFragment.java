@@ -78,7 +78,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
         etReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
 
         enterJobNotesWrapper = (TextInputLayout) v.findViewById(R.id.enter_job_notes_wrapper);
-        enterJobNotesWrapper.setHint("Notes");
+        enterJobNotesWrapper.setHint(getString(R.string.add_job_notes_hint));
         etJobNotes = (TextInputEditText) enterJobNotesWrapper.getEditText();
 
         resButton = (RadioButton) v.findViewById(R.id.switch_residential);
@@ -109,7 +109,7 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                 etGrossSale.setEnabled(checkedId != R.id.switch_cancellation);
                 etNetSale.setEnabled(checkedId != R.id.switch_cancellation);
                 payTypeSpinner.setEnabled(checkedId != R.id.switch_cancellation);
-                enterJobNotesWrapper.setHint(checkedId == R.id.switch_cancellation ? "Reason" : "Notes");
+                enterJobNotesWrapper.setHint(checkedId == R.id.switch_cancellation ? "Reason" : getString(R.string.add_job_notes_hint));
 
             }
         });
@@ -182,7 +182,8 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                         && (!TextUtils.isEmpty(etGrossSale.getText()) || !etGrossSale.isEnabled())
                         && (!TextUtils.isEmpty(etNetSale.getText()) || !etNetSale.isEnabled())
                         && (validateEditTextLength(etReceiptNumber, 5, 5) || !etReceiptNumber.isEnabled())
-                        && (payTypeSpinner.getSelectedItemPosition() != 0) || !payTypeSpinner.isEnabled()) {
+                        && (payTypeSpinner.getSelectedItemPosition() != 0) || !payTypeSpinner.isEnabled()
+                        && (!startTime.getText().equals("") && !endTime.getText().equals(""))) {
 
                     JobObject job = new JobObject();
 
@@ -253,6 +254,9 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                     if (payTypeSpinner.getSelectedItemPosition() == 0) {
                         TextView errorText = (TextView) payTypeSpinner.getSelectedView();
                         errorText.setError("");
+                    }
+                    if (startTime.getText().equals("") || endTime.getText().equals("")) {
+                        Toast.makeText(getActivity(), "Start and end times required", Toast.LENGTH_SHORT).show();
                     }
 
                 }

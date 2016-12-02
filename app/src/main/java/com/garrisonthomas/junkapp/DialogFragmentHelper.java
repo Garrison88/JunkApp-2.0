@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
@@ -26,6 +27,7 @@ import java.util.Calendar;
 public class DialogFragmentHelper extends DialogFragment {
 
     public static NumberFormat currencyFormat;
+    public static FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            dumps_card_view:cardBackgroundColor="@color/darkAccent"
+            dumps_card_view:cardBackgroundColor="@color/windowBackground"
             dumps_card_view:cardUseCompatPadding="true"
             dumps_card_view:contentPadding="5dp">
 

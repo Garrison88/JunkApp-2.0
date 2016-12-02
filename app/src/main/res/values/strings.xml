@@ -23,4 +23,5 @@
     <string name="end">End</string>
     <!--Firebase references-->
     <string name="sp_current_journal_ref">currentJournalRef</string>
+    <string name="add_job_notes_hint">Breakdown, customer name &amp; number</string>
 </resources>

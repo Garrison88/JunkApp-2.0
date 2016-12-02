@@ -90,7 +90,7 @@ public class ViewDumpDialogFragment extends DialogFragmentHelper implements View
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         Bundle vdBundle = getArguments();
         dumpName = vdBundle.getString("dumpName");
-        isRebate = (dumpName.substring(0, 2).equals("R+"));
+        isRebate = (dumpName != null && dumpName.substring(0, 2).equals("R+"));
         dumpReceiptNumber = vdBundle.getInt("dumpReceiptNumber");
         currentJournalRef = vdBundle.getString(getString(R.string.sp_current_journal_ref));
         dialog.setTitle(dumpName);

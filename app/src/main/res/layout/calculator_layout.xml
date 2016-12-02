@@ -32,7 +32,7 @@
                     android:id="@+id/volume_spinner_card_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    calc_card_view:cardBackgroundColor="@color/darkAccent"
+                    calc_card_view:cardBackgroundColor="@color/windowBackground"
                     calc_card_view:cardUseCompatPadding="true"
                     calc_card_view:contentPadding="4dp"
                     android:layout_weight="1">
@@ -53,7 +53,7 @@
                     android:id="@+id/bedload_spinner_card_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    calc_card_view:cardBackgroundColor="@color/darkAccent"
+                    calc_card_view:cardBackgroundColor="@color/windowBackground"
                     calc_card_view:cardUseCompatPadding="true"
                     calc_card_view:contentPadding="4dp"
                     android:layout_weight="1">
