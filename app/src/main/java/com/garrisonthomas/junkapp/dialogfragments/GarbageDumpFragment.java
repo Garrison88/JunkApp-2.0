@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -37,15 +39,15 @@ import static com.garrisonthomas.junkapp.BaseActivity.preferences;
 public class GarbageDumpFragment extends DialogFragmentHelper {
 
     private TextInputEditText etAddDumpWeight, etDumpReceiptNumber, etPercentPrevious, etEditCost;
-    private TextInputLayout enterWeightWrapper, enterReceiptNumberWrapper, enterPercentPreviousWrapper;
+    private TextInputLayout enterWeightWrapper, enterReceiptNumberWrapper;
+    private CheckBox checkBoxAfterHours;
     private TextView tvGrossCost;
     private ImageButton btnEditCost;
     private Spinner dumpNameSpinner;
-    private double pricePerTonne;
-    private double result;
+    private double pricePerTonne, result;
     private String dumpNameString, currentJournalRef;
     private boolean costIsEditable;
-    private LinearLayout dumpCostLayout;
+    private LinearLayout dumpCostLayout, afterHoursLayout;
 
     private ArrayList<TransferStationObject> transferStationObjectArrayList;
     private ArrayList<String> dumpNameArray;
@@ -62,13 +64,15 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
         etAddDumpWeight = (TextInputEditText) enterWeightWrapper.getEditText();
         enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.enter_receipt_number_wrapper);
         etDumpReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
-        enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.enter_percent_previous_wrapper);
+        TextInputLayout enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.enter_percent_previous_wrapper);
         etPercentPrevious = (TextInputEditText) enterPercentPreviousWrapper.getEditText();
         etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
         TextInputLayout editWeightWrapper = (TextInputLayout) v.findViewById(R.id.edit_dump_cost_wrapper);
         etEditCost = (TextInputEditText) editWeightWrapper.getEditText();
 
         tvGrossCost = (TextView) v.findViewById(R.id.tv_dump_gross_cost);
+
+        checkBoxAfterHours = (CheckBox) v.findViewById(R.id.check_box_after_hours);
 
         View cancelSaveLayout = v.findViewById(R.id.garbage_cancel_save_button_bar);
 
@@ -80,6 +84,7 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
         dumpNameSpinner = (Spinner) v.findViewById(R.id.spinner_dump_dialog);
 
         dumpCostLayout = (LinearLayout) v.findViewById(R.id.dump_cost_layout);
+        afterHoursLayout = (LinearLayout) v.findViewById(R.id.linear_layout_after_hours);
 
         transferStationObjectArrayList = new ArrayList<>();
         dumpNameArray = new ArrayList<>();
@@ -121,6 +126,13 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                     }
                 });
 
+        checkBoxAfterHours.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                etAddDumpWeight.setText("");
+            }
+        });
+
         dumpNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -131,6 +143,12 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
                 costIsEditable = false;
                 dumpNameString = transferStationObjectArrayList.get(position).getName();
                 pricePerTonne = transferStationObjectArrayList.get(position).getRate();
+
+                checkBoxAfterHours.setChecked(false);
+
+                afterHoursLayout.setVisibility(dumpNameString.equals("Tor Can")
+                        ? View.VISIBLE
+                        : View.GONE);
 
             }
 
@@ -159,7 +177,9 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
 
                     int minimum = transferStationObjectArrayList.get(dumpNameSpinner.getSelectedItemPosition()).getMinimum();
 
-                    result = DialogFragmentHelper.calculateDump(pricePerTonne, weightInTonnes, minimum);
+                    result = (checkBoxAfterHours.isChecked() && dumpNameString.equals("Tor Can")
+                            ? DialogFragmentHelper.calculateDump(pricePerTonne, weightInTonnes, minimum) + 25
+                            : DialogFragmentHelper.calculateDump(pricePerTonne, weightInTonnes, minimum));
 
                     dumpCostLayout.setVisibility(View.VISIBLE);
                     tvGrossCost.setText(currencyFormat.format(result));

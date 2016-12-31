@@ -49,6 +49,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_after_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:visibility="gone">
+
+                <TextView
+                    android:text="After hours?"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <CheckBox
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/check_box_after_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/dump_cost_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

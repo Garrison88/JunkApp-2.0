@@ -109,7 +109,9 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
                 etGrossSale.setEnabled(checkedId != R.id.switch_cancellation);
                 etNetSale.setEnabled(checkedId != R.id.switch_cancellation);
                 payTypeSpinner.setEnabled(checkedId != R.id.switch_cancellation);
-                enterJobNotesWrapper.setHint(checkedId == R.id.switch_cancellation ? "Reason" : getString(R.string.add_job_notes_hint));
+                enterJobNotesWrapper.setHint(checkedId == R.id.switch_cancellation
+                        ? "Reason"
+                        : getString(R.string.add_job_notes_hint));
 
             }
         });
@@ -131,13 +133,15 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
 
         });
 
         etGrossSale.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -157,7 +161,8 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         startTime.setOnClickListener(new View.OnClickListener() {

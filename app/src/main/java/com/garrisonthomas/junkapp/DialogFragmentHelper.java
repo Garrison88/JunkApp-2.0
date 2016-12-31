@@ -18,8 +18,12 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Garrison on 2016-06-11.
@@ -102,22 +106,31 @@ public class DialogFragmentHelper extends DialogFragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
-                if (selectedMinute == 00) {
-                    button.setText(selectedHour + ":" + selectedMinute + "0");
-                } else if (selectedMinute < 10) {
-                    button.setText(selectedHour + ":" + String.format("%02d", selectedMinute));
-                } else {
-                    button.setText(selectedHour + ":" + selectedMinute);
+//                if (selectedMinute == 00) {
+//                    button.setText(selectedHour + ":" + selectedMinute + "0");
+//                } else if (selectedMinute < 10) {
+//                    button.setText(selectedHour + ":" + String.format("%02d", selectedMinute));
+//                } else {
+//                    button.setText(selectedHour + ":" + selectedMinute);
+//                }
+
+//                String input = selectedHour + ":" + selectedMinute;
+                DateFormat inputFormat = new SimpleDateFormat("HH:mm");
+                DateFormat outputFormat = new SimpleDateFormat("h:mma");
+
+
+//                SimpleDateFormat fmt = new SimpleDateFormat("h:mm a");
+                Date date = null;
+                try {
+                    date = inputFormat.parse(selectedHour + ":" + selectedMinute);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
 
-//                SimpleDateFormat fmt = new SimpleDateFormat("kk:mm");
-//                Date date = new Date();
-//                String dateString = fmt.format(date);
-//
-//                button.setText(dateString);
+                button.setText(outputFormat.format(date));
 
             }
-        }, hour, minute, true);//Yes 24 hour time
+        }, hour, minute, false);//Yes 24 hour time
         mTimePicker.setTitle(title);
 
         return mTimePicker;

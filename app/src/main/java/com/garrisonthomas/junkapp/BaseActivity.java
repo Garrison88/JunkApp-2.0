@@ -91,7 +91,7 @@ public class BaseActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_about_developer:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.developer_website)));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_developer_website)));
                 startActivity(browserIntent);
                 break;
 
@@ -102,6 +102,11 @@ public class BaseActivity extends AppCompatActivity {
 
             case R.id.action_login_logout:
                 LoginLogout();
+                break;
+
+            case R.id.action_privacy_policy:
+                Intent privacyPolicyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
+                startActivity(privacyPolicyIntent);
                 break;
 
             case R.id.action_email_office:

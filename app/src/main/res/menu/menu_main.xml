@@ -18,35 +18,41 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_login_logout"
-        android:orderInCategory="3"
-        android:title="Login"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_archive_journal"
         android:icon="@drawable/ic_archive_white_24dp"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:title="Archive Journal"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete_journal"
         android:icon="@drawable/ic_delete_white_24px"
-        android:orderInCategory="5"
+        android:orderInCategory="4"
         android:title="Delete Journal"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="6"
+        android:orderInCategory="5"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_login_logout"
+        android:orderInCategory="6"
+        android:title="Login"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_about_developer"
         android:orderInCategory="7"
         android:title="@string/menu_text_developer_website"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_privacy_policy"
+        android:orderInCategory="8"
+        android:title="Privacy Policy"
         app:showAsAction="never" />
 
 </menu>

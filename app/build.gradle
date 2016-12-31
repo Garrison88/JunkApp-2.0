@@ -8,7 +8,7 @@ android {
         applicationId "com.garrisonthomas.junkapp"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 14
+        versionCode 16
         versionName "2.0"
 
         // Enabling multidex support
@@ -38,7 +38,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
         classpath 'com.google.gms:google-services:3.0.0'
     }
