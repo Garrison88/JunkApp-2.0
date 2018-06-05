@@ -160,12 +160,12 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                String downloadUrlString = taskSnapshot.getDownloadUrl().toString();
+//TODO removed this for testing
+//                                String downloadUrlString = taskSnapshot.getDownloadUrl().toString();
 
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 
-                                quote.setPhotoDownloadUrl(downloadUrlString);
+//                                quote.setPhotoDownloadUrl(downloadUrlString);
                                 quote.setQuoteSID(quoteSIDInt);
                                 quote.setTime(quoteTime);
                                 quote.setLowEnd(Double.valueOf(etLowEnd.getText().toString()));

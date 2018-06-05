@@ -1,86 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--<string-array name="dumps_info">-->
-        <!--&lt;!&ndash;Laird&ndash;&gt;-->
-        <!--<item>Location: Laird and Eglington-->
-            <!--\nHours: Monday–Friday 5am-6pm-->
-            <!--\nClosed Saturday-Sunday-->
-            <!--\n-->
-            <!--\n**Remember to wear safety gear**</item>-->
-        <!--&lt;!&ndash;Cherry&ndash;&gt;-->
-        <!--<item>Location: Cherry and Lakeshore-->
-            <!--\nHours: Monday-Friday 4am-9:30pm-->
-            <!--\nSaturday-Sunday 6am-6pm-->
-            <!--\n$40 minimum</item>-->
-        <!--&lt;!&ndash;Shorncliffe&ndash;&gt;-->
-        <!--<item>Location: Bloor and Kipling-->
-            <!--\nHours: Monday–Friday 7am-7pm-->
-            <!--\nSaturday 6am-1pm-->
-            <!--\nClosed Sunday-->
-            <!--\n$25 minimum</item>-->
-        <!--&lt;!&ndash;Fenmar&ndash;&gt;-->
-        <!--<item>Location: Weston and Finch-->
-            <!--\nHours: Monday-Friday 6am-6pm-->
-            <!--\nSaturday 7am-3pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;Miller&ndash;&gt;-->
-        <!--<item>Location: Highway 7 and Warden-->
-            <!--\nHours: Monday-Friday 8am-6pm-->
-            <!--\nSaturday 8am-5pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;Medulla West&ndash;&gt;-->
-        <!--<item>Location: South Etobicoke-->
-            <!--\nHours: Monday-Friday 6am-8pm-->
-            <!--\nSaturday 7am-2pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;Medulla East&ndash;&gt;-->
-        <!--<item>Location: Markham and Sheppard-->
-            <!--\nHours: Unknown</item>-->
-        <!--&lt;!&ndash;GFL Pickering&ndash;&gt;-->
-        <!--<item>Location: 401 and Brock Rd-->
-            <!--\nHours: Monday-Friday 6am-6pm-->
-            <!--\nSaturday 7am-1pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;GFL Etobicoke&ndash;&gt;-->
-        <!--<item>Location: Islington and Rexdale-->
-            <!--\nHours: Monday-Friday 6am-3pm-->
-            <!--\nClosed Saturday-Sunday</item>-->
-        <!--&lt;!&ndash;GFL Mississauga&ndash;&gt;-->
-        <!--<item>Location: 403 and Mavis-->
-            <!--\nHours: Monday-Friday 6am-6pm-->
-            <!--\nClosed Saturday-Sunday</item>-->
-        <!--&lt;!&ndash;WM Etibicoke&ndash;&gt;-->
-        <!--<item>Location: Evans and Islington-->
-            <!--\nHours: Monday-Friday 5am-6pm-->
-            <!--\nSaturday 6am-1pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;WM St Catherines&ndash;&gt;-->
-        <!--<item>Location: QEW and Welland-->
-            <!--\nHours: Monday-Friday 5am-6pm-->
-            <!--\nSaturday 6am-1pm-->
-            <!--\nClosed Sunday</item>-->
-        <!--&lt;!&ndash;WM Hamilton&ndash;&gt;-->
-        <!--<item>Location: Upper Ottawa and Rymal-->
-            <!--\nHours: Monday-Friday 8am-5pm-->
-            <!--\nClosed Saturday-Sunday</item>-->
-        <!--&lt;!&ndash;Mountain Transfer&ndash;&gt;-->
-        <!--<item>Location: Red Hill Valley and QEW-->
-            <!--\nHours: Monday-Friday 8am-5pm-->
-            <!--\nClosed Saturday-Sunday</item>-->
-        <!--&lt;!&ndash;Tor-Can&ndash;&gt;-->
-        <!--<item>Location: Kennedy and 401-->
-            <!--\nHours: 24/7-->
-            <!--\n$65 min-->
-            <!--\n-->
-            <!--\n**Extra $25/tonne after hours and on weekends**</item>-->
-        <!--&lt;!&ndash;Tuff Recycling Inc&ndash;&gt;-->
-        <!--<item>Location: Brampton (Queen St E and 410)-->
-            <!--\nHours: Monday-Friday 6am-6pm-->
-            <!--\nSaturday 6am-1pm-->
-            <!--\nClosed Sunday</item>-->
-    <!--</string-array>-->
-
     <string-array name="material">
         <item>Metal</item>
         <item>Paper</item>
@@ -152,16 +72,16 @@
         <item>0</item>
         <!--Volume-->
         <item>99</item>
-        <item>149</item>
-        <item>189</item>
-        <item>239</item>
-        <item>279</item>
-        <item>309</item>
-        <item>349</item>
-        <item>399</item>
-        <item>429</item>
+        <item>169</item>
+        <item>209</item>
+        <item>259</item>
+        <item>299</item>
+        <item>339</item>
+        <item>389</item>
         <item>449</item>
-        <item>479</item>
+        <item>469</item>
+        <item>489</item>
+        <item>529</item>
         <item>0</item>
         <!--Extras-->
         <item>99</item>
@@ -220,7 +140,6 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
-        <item>TEST</item>
     </string-array>
 
     <string-array name="job_pay_type">
