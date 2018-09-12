@@ -60,26 +60,26 @@ public class RebateDumpFragment extends Fragment {
 
         firebaseJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        enterTonnageWrapper = (TextInputLayout) v.findViewById(R.id.enter_rebate_tonnage_wrapper);
+        enterTonnageWrapper = v.findViewById(R.id.enter_rebate_tonnage_wrapper);
         etRebateTonnage = (TextInputEditText) enterTonnageWrapper.getEditText();
-        enterAmountWrapper = (TextInputLayout) v.findViewById(R.id.enter_rebate_amount_wrapper);
+        enterAmountWrapper = v.findViewById(R.id.enter_rebate_amount_wrapper);
         etRebateAmount = (TextInputEditText) enterAmountWrapper.getEditText();
-        enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.rebate_receipt_number_wrapper);
+        enterReceiptNumberWrapper = v.findViewById(R.id.rebate_receipt_number_wrapper);
         etRebateReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
-        enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.rebate_percent_previous_wrapper);
+        enterPercentPreviousWrapper = v.findViewById(R.id.rebate_percent_previous_wrapper);
         etPercentPrevious = (TextInputEditText) enterPercentPreviousWrapper.getEditText();
         etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
 
         View cancelSaveLayout = v.findViewById(R.id.rebate_cancel_save_button_bar);
-        Button saveRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
-                cancelRebate = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveRebate = cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelRebate = cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         materialTypeArray = getResources().getStringArray(R.array.material);
         rebateLocationArray = getResources().getStringArray(R.array.rebate_location);
 
-        Spinner materialTypeSpinner = (Spinner) v.findViewById(R.id.spinner_material_type),
-                rebateLocationSpinner = (Spinner) v.findViewById(R.id.spinner_rebate_location),
-                weightUnitSpinner = (Spinner) v.findViewById(R.id.spinner_weight_unit);
+        Spinner materialTypeSpinner = v.findViewById(R.id.spinner_material_type),
+                rebateLocationSpinner = v.findViewById(R.id.spinner_rebate_location),
+                weightUnitSpinner = v.findViewById(R.id.spinner_weight_unit);
 
         materialTypeSpinner.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, materialTypeArray));

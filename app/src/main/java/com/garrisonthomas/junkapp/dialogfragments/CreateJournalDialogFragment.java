@@ -46,7 +46,7 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
     private Date date = new Date();
     private String currentYear = new SimpleDateFormat("yyyy", Locale.CANADA).format(date);
-    private String currentMonth = new SimpleDateFormat("MMM", Locale.CANADA).format(date);
+    private String currentMonth = new SimpleDateFormat("MMMM", Locale.CANADA).format(date);
     private String currentDay = new SimpleDateFormat("dd", Locale.CANADA).format(date);
     private String todaysDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.CANADA).format(date);
 
@@ -75,24 +75,24 @@ public class CreateJournalDialogFragment extends DialogFragmentHelper {
 
         final View v = inflater.inflate(R.layout.add_daily_journal_layout, container, false);
 
-        truckSpinner = (Spinner) v.findViewById(R.id.truck_spinner);
+        truckSpinner = v.findViewById(R.id.truck_spinner);
         truckArray = v.getResources().getStringArray(R.array.truck_number);
 
-        dStartTime = (Button) v.findViewById(R.id.driver_start_time);
+        dStartTime = v.findViewById(R.id.driver_start_time);
         dStartTime.setTransformationMethod(null);
-        nStartTime = (Button) v.findViewById(R.id.nav_start_time);
+        nStartTime = v.findViewById(R.id.nav_start_time);
         nStartTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.journal_cancel_save_button_bar);
 
-        Button createJournal = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
-                cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button createJournal = cancelSaveLayout.findViewById(R.id.btn_save),
+                cancel = cancelSaveLayout.findViewById(R.id.btn_cancel);
         createJournal.setText("CREATE");
 
         journalExists = true;
 
-        etDriver = (EditText) v.findViewById(R.id.et_driver);
-        etNavigator = (EditText) v.findViewById(R.id.et_navigator);
+        etDriver = v.findViewById(R.id.et_driver);
+        etNavigator = v.findViewById(R.id.et_navigator);
 
         truckSpinner.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, truckArray));

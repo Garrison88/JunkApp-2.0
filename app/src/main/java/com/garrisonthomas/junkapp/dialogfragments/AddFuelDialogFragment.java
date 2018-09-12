@@ -35,18 +35,18 @@ public class AddFuelDialogFragment extends DialogFragmentHelper {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        fuelVendorWrapper = (TextInputLayout) v.findViewById(R.id.et_fuel_vendor_wrapper);
+        fuelVendorWrapper = v.findViewById(R.id.et_fuel_vendor_wrapper);
         etFuelVendor = (TextInputEditText) fuelVendorWrapper.getEditText();
-        fuelCostWrapper = (TextInputLayout) v.findViewById(R.id.et_fuel_cost_wrapper);
+        fuelCostWrapper = v.findViewById(R.id.et_fuel_cost_wrapper);
         etFuelCost = (TextInputEditText) fuelCostWrapper.getEditText();
-        receiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.et_fuel_receipt_number_wrapper);
+        receiptNumberWrapper = v.findViewById(R.id.et_fuel_receipt_number_wrapper);
         etReceiptNumber = (TextInputEditText) receiptNumberWrapper.getEditText();
 
         etReceiptNumber.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         View cancelSaveLayout = v.findViewById(R.id.fuel_cancel_save_button_bar);
-        Button saveFuel = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
-        Button cancelFuel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveFuel = cancelSaveLayout.findViewById(R.id.btn_save);
+        Button cancelFuel = cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         saveFuel.setOnClickListener(new View.OnClickListener() {
             @Override

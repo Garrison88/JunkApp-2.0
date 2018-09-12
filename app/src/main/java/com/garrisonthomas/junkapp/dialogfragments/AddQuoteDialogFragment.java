@@ -67,29 +67,29 @@ public class AddQuoteDialogFragment extends DialogFragmentHelper {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        enterQuoteSIDWrapper = (TextInputLayout) v.findViewById(R.id.enter_quote_sid_wrapper);
+        enterQuoteSIDWrapper = v.findViewById(R.id.enter_quote_sid_wrapper);
         etQuoteSID = (TextInputEditText) enterQuoteSIDWrapper.getEditText();
         etQuoteSID.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
         etQuoteSID.addTextChangedListener(new CustomTextWatcher(5, 2, '-'));
 
-        enterLowEndWrapper = (TextInputLayout) v.findViewById(R.id.enter_low_end_wrapper);
+        enterLowEndWrapper = v.findViewById(R.id.enter_low_end_wrapper);
         etLowEnd = (TextInputEditText) enterLowEndWrapper.getEditText();
 
-        enterHighEndWrapper = (TextInputLayout) v.findViewById(R.id.enter_high_end_wrapper);
+        enterHighEndWrapper = v.findViewById(R.id.enter_high_end_wrapper);
         etHighEnd = (TextInputEditText) enterHighEndWrapper.getEditText();
 
-        enterQuoteNotesWrapper = (TextInputLayout) v.findViewById(R.id.enter_quote_notes_wrapper);
+        enterQuoteNotesWrapper = v.findViewById(R.id.enter_quote_notes_wrapper);
         etQuoteNotes = (TextInputEditText) enterQuoteNotesWrapper.getEditText();
 
-        startTime = (Button) v.findViewById(R.id.quote_start_time);
-        endTime = (Button) v.findViewById(R.id.quote_end_time);
+        startTime = v.findViewById(R.id.quote_start_time);
+        endTime = v.findViewById(R.id.quote_end_time);
 
         View cancelSaveLayout = v.findViewById(R.id.quote_cancel_save_button_bar);
 
-        Button saveQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
-                cancelQuote = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveQuote = cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelQuote = cancelSaveLayout.findViewById(R.id.btn_cancel);
 
-        choosePhoto = (ImageButton) v.findViewById(R.id.btn_select_quote_photo);
+        choosePhoto = v.findViewById(R.id.btn_select_quote_photo);
 
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override

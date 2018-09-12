@@ -60,31 +60,31 @@ public class GarbageDumpFragment extends DialogFragmentHelper {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        enterWeightWrapper = (TextInputLayout) v.findViewById(R.id.enter_weight_wrapper);
+        enterWeightWrapper = v.findViewById(R.id.enter_weight_wrapper);
         etAddDumpWeight = (TextInputEditText) enterWeightWrapper.getEditText();
-        enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.enter_receipt_number_wrapper);
+        enterReceiptNumberWrapper = v.findViewById(R.id.enter_receipt_number_wrapper);
         etDumpReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
-        TextInputLayout enterPercentPreviousWrapper = (TextInputLayout) v.findViewById(R.id.enter_percent_previous_wrapper);
+        TextInputLayout enterPercentPreviousWrapper = v.findViewById(R.id.enter_percent_previous_wrapper);
         etPercentPrevious = (TextInputEditText) enterPercentPreviousWrapper.getEditText();
         etPercentPrevious.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
-        TextInputLayout editWeightWrapper = (TextInputLayout) v.findViewById(R.id.edit_dump_cost_wrapper);
+        TextInputLayout editWeightWrapper = v.findViewById(R.id.edit_dump_cost_wrapper);
         etEditCost = (TextInputEditText) editWeightWrapper.getEditText();
 
-        tvGrossCost = (TextView) v.findViewById(R.id.tv_dump_gross_cost);
+        tvGrossCost = v.findViewById(R.id.tv_dump_gross_cost);
 
-        checkBoxAfterHours = (CheckBox) v.findViewById(R.id.check_box_after_hours);
+        checkBoxAfterHours = v.findViewById(R.id.check_box_after_hours);
 
         View cancelSaveLayout = v.findViewById(R.id.garbage_cancel_save_button_bar);
 
-        Button saveDump = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
-                cancelDump = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveDump = cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelDump = cancelSaveLayout.findViewById(R.id.btn_cancel);
 
-        btnEditCost = (ImageButton) v.findViewById(R.id.btn_edit_dump_cost);
+        btnEditCost = v.findViewById(R.id.btn_edit_dump_cost);
 
-        dumpNameSpinner = (Spinner) v.findViewById(R.id.spinner_dump_dialog);
+        dumpNameSpinner = v.findViewById(R.id.spinner_dump_dialog);
 
-        dumpCostLayout = (LinearLayout) v.findViewById(R.id.dump_cost_layout);
-        afterHoursLayout = (LinearLayout) v.findViewById(R.id.linear_layout_after_hours);
+        dumpCostLayout = v.findViewById(R.id.dump_cost_layout);
+        afterHoursLayout = v.findViewById(R.id.linear_layout_after_hours);
 
         transferStationObjectArrayList = new ArrayList<>();
         dumpNameArray = new ArrayList<>();

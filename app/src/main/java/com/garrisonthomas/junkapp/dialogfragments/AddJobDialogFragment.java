@@ -63,43 +63,43 @@ public class AddJobDialogFragment extends DialogFragmentHelper {
 
         currentJournalRef = preferences.getString(getString(R.string.sp_current_journal_ref), null);
 
-        enterSIDWrapper = (TextInputLayout) v.findViewById(R.id.enter_sid_wrapper);
+        enterSIDWrapper = v.findViewById(R.id.enter_sid_wrapper);
         etSID = (TextInputEditText) enterSIDWrapper.getEditText();
         etSID.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
         etSID.addTextChangedListener(new CustomTextWatcher(5, 2, '-'));
 
-        enterGrossSaleWrapper = (TextInputLayout) v.findViewById(R.id.enter_gross_sale_wrapper);
+        enterGrossSaleWrapper = v.findViewById(R.id.enter_gross_sale_wrapper);
         etGrossSale = (TextInputEditText) enterGrossSaleWrapper.getEditText();
 
-        enterNetSaleWrapper = (TextInputLayout) v.findViewById(R.id.enter_net_sale_wrapper);
+        enterNetSaleWrapper = v.findViewById(R.id.enter_net_sale_wrapper);
         etNetSale = (TextInputEditText) enterNetSaleWrapper.getEditText();
 
-        enterReceiptNumberWrapper = (TextInputLayout) v.findViewById(R.id.enter_receipt_number_wrapper);
+        enterReceiptNumberWrapper = v.findViewById(R.id.enter_receipt_number_wrapper);
         etReceiptNumber = (TextInputEditText) enterReceiptNumberWrapper.getEditText();
 
-        enterJobNotesWrapper = (TextInputLayout) v.findViewById(R.id.enter_job_notes_wrapper);
+        enterJobNotesWrapper = v.findViewById(R.id.enter_job_notes_wrapper);
         enterJobNotesWrapper.setHint(getString(R.string.add_job_notes_hint));
         etJobNotes = (TextInputEditText) enterJobNotesWrapper.getEditText();
 
-        resButton = (RadioButton) v.findViewById(R.id.switch_residential);
-        commButton = (RadioButton) v.findViewById(R.id.switch_commercial);
-        cancellationButton = (RadioButton) v.findViewById(R.id.switch_cancellation);
+        resButton = v.findViewById(R.id.switch_residential);
+        commButton = v.findViewById(R.id.switch_commercial);
+        cancellationButton = v.findViewById(R.id.switch_cancellation);
 
         payTypeArray = getResources().getStringArray(R.array.job_pay_type);
 
-        payTypeSpinner = (Spinner) v.findViewById(R.id.spinner_pay_type);
+        payTypeSpinner = v.findViewById(R.id.spinner_pay_type);
 
-        startTime = (Button) v.findViewById(R.id.job_start_time);
-        endTime = (Button) v.findViewById(R.id.job_end_time);
+        startTime = v.findViewById(R.id.job_start_time);
+        endTime = v.findViewById(R.id.job_end_time);
 
         View cancelSaveLayout = v.findViewById(R.id.job_cancel_save_button_bar);
 
-        Button saveJob = (Button) cancelSaveLayout.findViewById(R.id.btn_save),
-                cancelJob = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel);
+        Button saveJob = cancelSaveLayout.findViewById(R.id.btn_save),
+                cancelJob = cancelSaveLayout.findViewById(R.id.btn_cancel);
 
         // handle setting of jobType to "Cancellation" by auto-filling receiptNumber, gross, and net sale
         // and setting payType to "Cancellation"
-        SegmentedGroup segmentedGroup = (SegmentedGroup) v.findViewById(R.id.job_type_segmented_group);
+        SegmentedGroup segmentedGroup = v.findViewById(R.id.job_type_segmented_group);
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

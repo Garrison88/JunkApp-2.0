@@ -58,26 +58,26 @@ public class ArchiveJournalDialogFragment extends DialogFragmentHelper {
         navigator = preferences.getString("navigator", null);
         navStartTime = preferences.getString("navStartTime", null);
 
-        endOfDayNotes = (EditText) v.findViewById(R.id.end_day_notes);
+        endOfDayNotes = v.findViewById(R.id.end_day_notes);
 
-        dEndTime = (Button) v.findViewById(R.id.driver_end_time);
+        dEndTime = v.findViewById(R.id.driver_end_time);
         dEndTime.setText(driver);
         dEndTime.setTransformationMethod(null);
-        nEndTime = (Button) v.findViewById(R.id.nav_end_time);
+        nEndTime = v.findViewById(R.id.nav_end_time);
         nEndTime.setText(navigator);
         nEndTime.setTransformationMethod(null);
 
         View cancelSaveLayout = v.findViewById(R.id.archive_cancel_save_button_bar);
 
-        Button cancel = (Button) cancelSaveLayout.findViewById(R.id.btn_cancel),
-                archive = (Button) cancelSaveLayout.findViewById(R.id.btn_save);
+        Button cancel = cancelSaveLayout.findViewById(R.id.btn_cancel),
+                archive = cancelSaveLayout.findViewById(R.id.btn_save);
         archive.setText("ARCHIVE");
 
         endLoadArray = v.getResources().getStringArray(R.array.end_day_load);
         endFuelArray = v.getResources().getStringArray(R.array.end_day_fuel);
 
-        final Spinner endLoad = (Spinner) v.findViewById(R.id.end_day_load),
-                endFuel = (Spinner) v.findViewById(R.id.end_day_fuel);
+        final Spinner endLoad = v.findViewById(R.id.end_day_load),
+                endFuel = v.findViewById(R.id.end_day_fuel);
 
         endLoad.setAdapter(new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, endLoadArray));

@@ -53,15 +53,15 @@ public class DumpFragment extends Fragment {
         wholeNumberCurrencyFormat = NumberFormat.getCurrencyInstance();
         wholeNumberCurrencyFormat.setMinimumFractionDigits(0);
 
-        infoBtn = (Button) v.findViewById(R.id.btn_dump_info);
-        dirBtn = (Button) v.findViewById(R.id.btn_dump_directions);
-        calcBtn = (Button) v.findViewById(R.id.btn_calculate_dump);
-        dumpsClearBtn = (Button) v.findViewById(R.id.dumps_clear);
+        infoBtn = v.findViewById(R.id.btn_dump_info);
+        dirBtn = v.findViewById(R.id.btn_dump_directions);
+        calcBtn = v.findViewById(R.id.btn_calculate_dump);
+        dumpsClearBtn = v.findViewById(R.id.dumps_clear);
 
-        dumpsSpinner = (Spinner) v.findViewById(R.id.spinner_dumps);
+        dumpsSpinner = v.findViewById(R.id.spinner_dumps);
 
-        etDumpCost = (EditText) v.findViewById(R.id.et_dump_cost);
-        tvDumpCost = (TextView) v.findViewById(R.id.tv_dump_cost);
+        etDumpCost = v.findViewById(R.id.et_dump_cost);
+        tvDumpCost = v.findViewById(R.id.tv_dump_cost);
 
         transferStationObjectArrayList = new ArrayList<>();
         dumpNameArray = new ArrayList<>();

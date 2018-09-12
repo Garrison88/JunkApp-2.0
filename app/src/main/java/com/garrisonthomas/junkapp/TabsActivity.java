@@ -27,18 +27,18 @@ public class TabsActivity extends BaseActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
         setupViewPager(viewPager);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setSubtitle(auth.getCurrentUser() != null
                 ? auth.getCurrentUser().getEmail()
                 : null);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 

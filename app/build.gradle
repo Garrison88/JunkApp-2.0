@@ -7,11 +7,8 @@ android {
         applicationId "com.garrisonthomas.junkapp"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
+        versionCode 19
         versionName "2.0"
-
-        // Enabling multidex support
-//        multiDexEnabled true
 
     }
     buildTypes {
@@ -31,23 +28,14 @@ android {
 
 buildscript {
     repositories {
-//        google()
+        mavenCentral()
         google()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
-//        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'com.android.tools.build:gradle:3.1.4'
     }
 }
-
-//repositories {
-//    // ...
-//    maven { url 'https://maven.fabric.io/public' }
-//    maven {
-//        url 'https://maven.google.com/'
-//        name 'Google'
-//    }
-//}
 
 dependencies {
     // Android
@@ -58,8 +46,6 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
-//    compile 'com.android.support:multidex:1.0.1'
-//    compile 'com.google.android.gms:play-services:9.8.0'
     // Third-party libraries
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'org.apache.commons:commons-lang3:3.4'
@@ -70,12 +56,12 @@ dependencies {
     implementation 'com.jakewharton:butterknife:7.0.1'
     annotationProcessor 'com.jakewharton:butterknife:7.0.1'
     // Firebase / Google
-    implementation 'com.google.firebase:firebase-database:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-database:16.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
-    implementation 'com.google.firebase:firebase-storage:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-storage:16.0.2'
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
 
 }
 

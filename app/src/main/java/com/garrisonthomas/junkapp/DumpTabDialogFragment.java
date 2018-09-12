@@ -20,8 +20,8 @@ public class DumpTabDialogFragment extends DialogFragmentHelper {
 
         final View v = inflater.inflate(R.layout.dump_tabbed_dialog_layout, container);
 
-        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tabs);
+        viewPager = v.findViewById(R.id.viewpager);
+        TabLayout tabLayout = v.findViewById(R.id.tabs);
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);

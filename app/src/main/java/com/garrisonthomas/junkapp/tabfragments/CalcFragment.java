@@ -44,15 +44,15 @@ public class CalcFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.calculator_layout, container, false);
 
-        addHST = (Button) v.findViewById(R.id.btn_add_hst);
-        Button clearCost = (Button) v.findViewById(R.id.btn_clear_cost);
+        addHST = v.findViewById(R.id.btn_add_hst);
+        Button clearCost = v.findViewById(R.id.btn_clear_cost);
 
-        vSpinner = (Spinner) v.findViewById(R.id.spinner_volume);
-        bSpinner = (Spinner) v.findViewById(R.id.spinner_bedload);
+        vSpinner = v.findViewById(R.id.spinner_volume);
+        bSpinner = v.findViewById(R.id.spinner_bedload);
 
-        tvVolumeSize = (TextView) v.findViewById(R.id.tv_display_volume);
-        tvBedloadSize = (TextView) v.findViewById(R.id.tv_display_bedload);
-        tvTotal = (TextView) v.findViewById(R.id.load_total);
+        tvVolumeSize = v.findViewById(R.id.tv_display_volume);
+        tvBedloadSize = v.findViewById(R.id.tv_display_bedload);
+        tvTotal = v.findViewById(R.id.load_total);
 
         volumePrice = v.getResources().getIntArray(R.array.string_volume_price);
         bedloadPrice = v.getResources().getIntArray(R.array.string_bedload_price);
@@ -294,10 +294,10 @@ public class CalcFragment extends Fragment {
             View mySpinner = inflater.inflate(R.layout.custom_spinner_layout, parent,
                     false);
 
-            TextView main_text = (TextView) mySpinner.findViewById(R.id.tv_custom_spinner_first);
+            TextView main_text = mySpinner.findViewById(R.id.tv_custom_spinner_first);
             main_text.setText(volumeSize[position]);
 
-            TextView subSpinner = (TextView) mySpinner.findViewById(R.id.tv_custom_spinner_second);
+            TextView subSpinner = mySpinner.findViewById(R.id.tv_custom_spinner_second);
 
             if (position == 0 || position == 12 || position >= 16) {
                 subSpinner.setVisibility(View.GONE);
@@ -337,10 +337,10 @@ public class CalcFragment extends Fragment {
             View mySpinner = inflater.inflate(R.layout.custom_spinner_layout, parent,
                     false);
 
-            TextView main_text = (TextView) mySpinner.findViewById(R.id.tv_custom_spinner_first);
+            TextView main_text = mySpinner.findViewById(R.id.tv_custom_spinner_first);
             main_text.setText(bedloadSize[position]);
 
-            TextView subSpinner = (TextView) mySpinner.findViewById(R.id.tv_custom_spinner_second);
+            TextView subSpinner = mySpinner.findViewById(R.id.tv_custom_spinner_second);
 
             if (position == 0) {
                 subSpinner.setVisibility(View.GONE);
